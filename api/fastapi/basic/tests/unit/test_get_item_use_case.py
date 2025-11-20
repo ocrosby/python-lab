@@ -1,6 +1,6 @@
 """Unit tests for GetItemUseCase."""
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 
 import pytest
 from pytest_mock import MockerFixture

@@ -13,7 +13,8 @@ def install(ctx):
 def run(ctx, host="0.0.0.0", port=8000):
     """Run the FastAPI application."""
     ctx.run(
-        f"uvicorn src.fastapi_basic_example.main:app --host {host} --port {port} --reload"
+        f"uvicorn src.fastapi_basic_example.main:app --host {host} "
+        f"--port {port} --reload"
     )
 
 
@@ -47,7 +48,7 @@ def test(ctx, verbose=False, markers=None, coverage=True, fail_under=80):
     if coverage:
         flags.extend(
             [
-                f"--cov=src/fastapi_basic_example",
+                "--cov=src/fastapi_basic_example",
                 "--cov-report=term-missing",
                 "--cov-report=html:htmlcov",
                 f"--cov-fail-under={fail_under}",
@@ -133,7 +134,8 @@ def dev(ctx, log_level="info", json_logging=False):
     env_prefix = " ".join(env_vars) + " " if env_vars else ""
 
     ctx.run(
-        f"{env_prefix}uvicorn src.fastapi_basic_example.main:app --reload --host 0.0.0.0 --port 8000"
+        f"{env_prefix}uvicorn src.fastapi_basic_example.main:app --reload "
+        "--host 0.0.0.0 --port 8000"
     )
 
 

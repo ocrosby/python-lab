@@ -1,7 +1,6 @@
 """Item entity."""
 
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass
@@ -9,8 +8,8 @@ class Item:
     """Item entity representing a business item."""
 
     item_id: int
-    name: Optional[str] = None
-    description: Optional[str] = None
+    name: str | None = None
+    description: str | None = None
 
     def __post_init__(self):
         """Validate entity after initialization."""

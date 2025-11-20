@@ -1,7 +1,6 @@
 """Item DTOs."""
 
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass
@@ -9,7 +8,7 @@ class ItemResponseDTO:
     """Item response DTO."""
 
     item_id: int
-    q: Optional[str] = None
+    q: str | None = None
 
 
 @dataclass

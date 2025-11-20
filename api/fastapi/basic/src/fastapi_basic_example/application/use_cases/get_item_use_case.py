@@ -1,7 +1,5 @@
 """Get item use case."""
 
-from typing import Optional
-
 from ...domain.repositories.item_repository import ItemRepository
 from ...domain.value_objects.query_params import QueryParams
 from ..dto.item_dto import ItemResponseDTO
@@ -14,7 +12,7 @@ class GetItemUseCase:
         self._item_repository = item_repository
 
     async def execute(
-        self, item_id: int, query_params: Optional[QueryParams] = None
+        self, item_id: int, query_params: QueryParams | None = None
     ) -> ItemResponseDTO:
         """Execute the get item use case."""
         if item_id <= 0:

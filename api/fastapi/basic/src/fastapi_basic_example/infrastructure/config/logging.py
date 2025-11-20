@@ -1,12 +1,12 @@
 """Logging configuration settings."""
 
 import os
-from typing import Dict, Any
+from typing import Any
 
 from ..logging.config import get_uvicorn_log_config
 
 
-def get_logging_config() -> Dict[str, Any]:
+def get_logging_config() -> dict[str, Any]:
     """Get logging configuration based on environment variables."""
     log_level = os.getenv("LOG_LEVEL", "info").lower()
     use_json = os.getenv("JSON_LOGGING", "false").lower() == "true"

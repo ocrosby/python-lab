@@ -1,7 +1,6 @@
 """API routers for the FastAPI application."""
 
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, HTTPException
@@ -29,7 +28,7 @@ async def read_root(
 @inject
 async def read_item(
     item_id: int,
-    q: Optional[str] = None,
+    q: str | None = None,
     use_case: GetItemUseCase = Depends(Provide[Container.get_item_use_case]),
 ) -> ItemResponseDTO:
     """Get item by ID."""
@@ -58,7 +57,7 @@ async def liveness_probe(
     If it fails, Kubernetes will restart the container.
     """
     if await health_service.is_alive():
-        return {"status": "alive", "timestamp": datetime.now(timezone.utc).isoformat()}
+        return {"status": "alive", "timestamp": datetime.now(UTC).isoformat()}
     else:
         raise HTTPException(status_code=503, detail="Service not alive")
 
@@ -75,7 +74,7 @@ async def readiness_probe(
     If it fails, Kubernetes will stop sending traffic to this instance.
     """
     if await health_service.is_ready():
-        return {"status": "ready", "timestamp": datetime.now(timezone.utc).isoformat()}
+        return {"status": "ready", "timestamp": datetime.now(UTC).isoformat()}
     else:
         raise HTTPException(status_code=503, detail="Service not ready")
 
@@ -94,7 +93,7 @@ async def startup_probe(
     if await health_service.is_alive():
         return {
             "status": "started",
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
     else:
         raise HTTPException(status_code=503, detail="Service not started")

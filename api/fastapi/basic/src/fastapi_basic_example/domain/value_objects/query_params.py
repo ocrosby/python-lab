@@ -1,14 +1,13 @@
 """Query parameters value object."""
 
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass(frozen=True)
 class QueryParams:
     """Value object for query parameters."""
 
-    q: Optional[str] = None
+    q: str | None = None
 
     def __post_init__(self):
         """Validate query parameters."""

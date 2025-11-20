@@ -1,33 +1,35 @@
-"""Unit tests for InMemoryItemRepository."""
+"""Unit tests for Repo."""
 
 import pytest
 
 from src.fastapi_basic_example.domain.entities.item import Item
-from src.fastapi_basic_example.infrastructure.persistence.in_memory_item_repository import (
-    InMemoryItemRepository,
+from src.fastapi_basic_example.infrastructure.persistence import (
+    in_memory_item_repository,
 )
+
+Repo = in_memory_item_repository.InMemoryItemRepository
 
 
 @pytest.mark.unit
-class TestInMemoryItemRepository:
-    """Test cases for InMemoryItemRepository."""
+class TestRepo:
+    """Test cases for Repo."""
 
     def test_init(self):
         """Test repository initialization."""
-        repository = InMemoryItemRepository()
+        repository = Repo()
         assert repository._items == {}
 
     @pytest.mark.asyncio
     async def test_get_by_id_not_found(self):
         """Test getting an item that doesn't exist."""
-        repository = InMemoryItemRepository()
+        repository = Repo()
         result = await repository.get_by_id(999)
         assert result is None
 
     @pytest.mark.asyncio
     async def test_get_by_id_found(self):
         """Test getting an item that exists."""
-        repository = InMemoryItemRepository()
+        repository = Repo()
         item = Item(item_id=1, name="Test Item", description="Test Description")
         repository._items[1] = item
 
@@ -40,7 +42,7 @@ class TestInMemoryItemRepository:
     @pytest.mark.asyncio
     async def test_multiple_items(self):
         """Test repository with multiple items."""
-        repository = InMemoryItemRepository()
+        repository = Repo()
         item1 = Item(item_id=1, name="Item 1", description="Description 1")
         item2 = Item(item_id=2, name="Item 2", description="Description 2")
 

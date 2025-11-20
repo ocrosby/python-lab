@@ -1,7 +1,5 @@
 """In-memory implementation of item repository."""
 
-from typing import Dict, Optional
-
 from ...domain.entities.item import Item
 from ...domain.repositories.item_repository import ItemRepository
 
@@ -10,9 +8,9 @@ class InMemoryItemRepository(ItemRepository):
     """In-memory implementation of ItemRepository."""
 
     def __init__(self):
-        self._items: Dict[int, Item] = {}
+        self._items: dict[int, Item] = {}
 
-    async def get_by_id(self, item_id: int) -> Optional[Item]:
+    async def get_by_id(self, item_id: int) -> Item | None:
         """Get item by ID."""
         return self._items.get(item_id)
 

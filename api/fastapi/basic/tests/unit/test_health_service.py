@@ -1,7 +1,7 @@
 """Unit tests for HealthService."""
 
-from datetime import datetime, timezone
-from unittest.mock import MagicMock, patch
+from datetime import UTC, datetime
+from unittest.mock import patch
 
 import pytest
 from pytest_mock import MockerFixture
@@ -22,7 +22,7 @@ class TestHealthService:
         with patch(
             "src.fastapi_basic_example.application.services.health_service.datetime"
         ) as mock_dt:
-            mock_startup_time = datetime(2024, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+            mock_startup_time = datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC)
             mock_dt.now.return_value = mock_startup_time
 
             health_service = HealthService()
@@ -66,10 +66,8 @@ class TestHealthService:
     async def test_get_detailed_health_status(self, mocker: MockerFixture):
         """Test get_detailed_health_status with mocked datetime."""
         # Mock the startup time and current time
-        startup_time = datetime(2024, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
-        current_time = datetime(
-            2024, 1, 1, 0, 5, 0, tzinfo=timezone.utc
-        )  # 5 minutes later
+        startup_time = datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC)
+        current_time = datetime(2024, 1, 1, 0, 5, 0, tzinfo=UTC)  # 5 minutes later
 
         with patch(
             "src.fastapi_basic_example.application.services.health_service.datetime"
@@ -95,9 +93,9 @@ class TestHealthService:
         with patch(
             "src.fastapi_basic_example.application.services.health_service.datetime"
         ) as mock_dt:
-            startup_time = datetime(2024, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+            startup_time = datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC)
             current_time = datetime(
-                2024, 1, 1, 1, 30, 45, tzinfo=timezone.utc
+                2024, 1, 1, 1, 30, 45, tzinfo=UTC
             )  # 1.5 hours later
 
             mock_dt.now.return_value = startup_time

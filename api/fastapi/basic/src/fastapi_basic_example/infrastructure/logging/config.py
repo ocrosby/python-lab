@@ -3,7 +3,7 @@
 import logging
 import logging.config
 import sys
-from typing import Any, Dict
+from typing import Any
 
 import structlog
 from pythonjsonlogger import jsonlogger
@@ -52,7 +52,7 @@ def get_logger(name: str) -> structlog.stdlib.BoundLogger:
 
 def get_uvicorn_log_config(
     log_level: str = "info", use_json: bool = False
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get uvicorn logging configuration."""
     if use_json:
         formatter = {

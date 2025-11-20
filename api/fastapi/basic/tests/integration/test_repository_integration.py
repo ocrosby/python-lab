@@ -3,19 +3,21 @@
 import pytest
 
 from src.fastapi_basic_example.domain.entities.item import Item
-from src.fastapi_basic_example.infrastructure.persistence.in_memory_item_repository import (
-    InMemoryItemRepository,
+from src.fastapi_basic_example.infrastructure.persistence import (
+    in_memory_item_repository,
 )
+
+Repo = in_memory_item_repository.InMemoryItemRepository
 
 
 @pytest.mark.integration
-class TestInMemoryItemRepositoryIntegration:
-    """Integration test cases for InMemoryItemRepository."""
+class TestRepoIntegration:
+    """Integration test cases for Repo."""
 
     @pytest.mark.asyncio
     async def test_repository_workflow(self):
         """Test complete repository workflow."""
-        repository = InMemoryItemRepository()
+        repository = Repo()
 
         # Initially empty
         result = await repository.get_by_id(1)
@@ -37,7 +39,7 @@ class TestInMemoryItemRepositoryIntegration:
     @pytest.mark.asyncio
     async def test_repository_concurrency(self):
         """Test repository behavior under concurrent access simulation."""
-        repository = InMemoryItemRepository()
+        repository = Repo()
 
         # Add multiple items
         items = [

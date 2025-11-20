@@ -2,14 +2,14 @@
 
 import time
 import uuid
+from collections.abc import Callable
 from contextlib import asynccontextmanager
-from typing import Callable
 
 import structlog
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from .context import set_request_id, get_request_id
+from .context import set_request_id
 
 logger = structlog.get_logger(__name__)
 

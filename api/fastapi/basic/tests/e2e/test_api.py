@@ -1,6 +1,5 @@
 """End-to-end API tests."""
 
-import pytest
 from fastapi.testclient import TestClient
 
 from src.fastapi_basic_example.main import app

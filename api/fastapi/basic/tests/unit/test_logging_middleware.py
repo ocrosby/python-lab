@@ -1,8 +1,9 @@
 """Tests for logging middleware."""
 
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from src.fastapi_basic_example.infrastructure.logging.middleware import (

@@ -1,11 +1,11 @@
 """Health service for checking application health."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import structlog
 
-from ..dto.item_dto import HealthCheckDTO, WelcomeDTO
 from ...infrastructure.logging.context import get_logger_context
+from ..dto.item_dto import HealthCheckDTO, WelcomeDTO
 
 logger = structlog.get_logger(__name__)
 
@@ -15,7 +15,7 @@ class HealthService:
 
     def __init__(self):
         """Initialize the health service."""
-        self.startup_time = datetime.now(timezone.utc)
+        self.startup_time = datetime.now(UTC)
         logger.info("Health service initialized", **get_logger_context())
 
     def get_health_status(self) -> HealthCheckDTO:
@@ -30,13 +30,11 @@ class HealthService:
 
     async def get_detailed_health_status(self):
         """Get detailed health status of the application."""
-        uptime_seconds = (
-            datetime.now(timezone.utc) - self.startup_time
-        ).total_seconds()
+        uptime_seconds = (datetime.now(UTC) - self.startup_time).total_seconds()
 
         status = {
             "status": "healthy",
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "uptime_seconds": uptime_seconds,
             "version": "1.0.0",
         }
@@ -58,8 +56,4 @@ class HealthService:
     async def is_alive(self):
         """Check if the application is alive."""
         logger.debug("Liveness check requested", **get_logger_context())
-        return True
-
-    async def is_alive(self):
-        """Check if the application is alive."""
         return True
