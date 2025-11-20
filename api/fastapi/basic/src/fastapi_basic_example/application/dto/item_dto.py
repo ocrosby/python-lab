@@ -13,7 +13,17 @@ class ItemResponseDTO(BaseModel):
 class HealthCheckDTO(BaseModel):
     """Health check response DTO."""
 
-    status: str = "healthy"
+    status: str
+    timestamp: str
+
+
+class DetailedHealthCheckDTO(BaseModel):
+    """Detailed health check response DTO."""
+
+    status: str
+    timestamp: str
+    uptime_seconds: float
+    version: str
 
 
 class WelcomeDTO(BaseModel):

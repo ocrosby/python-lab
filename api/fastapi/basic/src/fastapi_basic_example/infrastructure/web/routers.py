@@ -1,29 +1,16 @@
 """API routers for the FastAPI application."""
 
-from datetime import UTC, datetime
-
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, HTTPException
 
 from ...application.dto.item_dto import HealthCheckDTO, ItemResponseDTO, WelcomeDTO
 from ...application.services.health_service import HealthService
 from ...application.use_cases.get_item_use_case import GetItemUseCase
+from ...domain.constants import HealthConstants
 from ...domain.value_objects.query_params import QueryParams
+from ...infrastructure.utils.datetime_utils import current_utc_timestamp
 from ..di.container import Container
 
-# Constants to eliminate duplication
-HEALTHY_STATUS = "healthy"
-READY_STATUS = "ready"
-ALIVE_STATUS = "alive"
-STARTED_STATUS = "started"
-
-
-def get_current_timestamp() -> str:
-    """Get current UTC timestamp in ISO format."""
-    return datetime.now(UTC).isoformat()
-
-
-# Create router
 router = APIRouter()
 
 
@@ -69,9 +56,11 @@ async def liveness_probe(
     If it fails, Kubernetes will restart the container.
     """
     if await health_service.is_alive():
-        return {"status": ALIVE_STATUS, "timestamp": get_current_timestamp()}
-    else:
-        raise HTTPException(status_code=503, detail="Service not alive")
+        return {
+            "status": HealthConstants.ALIVE,
+            "timestamp": current_utc_timestamp(),
+        }
+    raise HTTPException(status_code=503, detail="Service not alive")
 
 
 @router.get("/health/ready")
@@ -86,9 +75,11 @@ async def readiness_probe(
     If it fails, Kubernetes will stop sending traffic to this instance.
     """
     if await health_service.is_ready():
-        return {"status": READY_STATUS, "timestamp": get_current_timestamp()}
-    else:
-        raise HTTPException(status_code=503, detail="Service not ready")
+        return {
+            "status": HealthConstants.READY,
+            "timestamp": current_utc_timestamp(),
+        }
+    raise HTTPException(status_code=503, detail="Service not ready")
 
 
 @router.get("/health/startup")
@@ -104,8 +95,7 @@ async def startup_probe(
     """
     if await health_service.is_alive():
         return {
-            "status": STARTED_STATUS,
-            "timestamp": get_current_timestamp(),
+            "status": HealthConstants.STARTED,
+            "timestamp": current_utc_timestamp(),
         }
-    else:
-        raise HTTPException(status_code=503, detail="Service not started")
+    raise HTTPException(status_code=503, detail="Service not started")

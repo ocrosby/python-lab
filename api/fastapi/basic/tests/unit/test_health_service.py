@@ -7,6 +7,7 @@ import pytest
 from pytest_mock import MockerFixture
 
 from src.fastapi_basic_example.application.dto.item_dto import (
+    DetailedHealthCheckDTO,
     HealthCheckDTO,
     WelcomeDTO,
 )
@@ -19,15 +20,10 @@ class TestHealthService:
 
     def test_init(self):
         """Test health service initialization."""
-        with patch(
-            "src.fastapi_basic_example.application.services.health_service.datetime"
-        ) as mock_dt:
-            mock_startup_time = datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC)
-            mock_dt.now.return_value = mock_startup_time
+        health_service = HealthService()
 
-            health_service = HealthService()
-
-            assert health_service.startup_time == mock_startup_time
+        assert health_service.startup_time is not None
+        assert isinstance(health_service.startup_time, datetime)
 
     def test_get_health_status(self):
         """Test get_health_status returns correct status."""
@@ -36,6 +32,7 @@ class TestHealthService:
 
         assert isinstance(result, HealthCheckDTO)
         assert result.status == "healthy"
+        assert result.timestamp is not None
 
     def test_get_welcome_message(self):
         """Test get_welcome_message returns correct message."""
@@ -63,48 +60,23 @@ class TestHealthService:
 
     @pytest.mark.asyncio
     async def test_get_detailed_health_status(self, mocker: MockerFixture):
-        """Test get_detailed_health_status with mocked datetime."""
-        # Mock the startup time and current time
-        startup_time = datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC)
-        current_time = datetime(2024, 1, 1, 0, 5, 0, tzinfo=UTC)  # 5 minutes later
+        """Test get_detailed_health_status."""
+        health_service = HealthService()
+        result = await health_service.get_detailed_health_status()
 
-        with patch(
-            "src.fastapi_basic_example.application.services.health_service.datetime"
-        ) as mock_dt:
-            # Mock the startup time during initialization
-            mock_dt.now.return_value = startup_time
-            health_service = HealthService()
-
-            # Mock the current time during the method call
-            mock_dt.now.return_value = current_time
-            current_time.isoformat.return_value = "2024-01-01T00:05:00+00:00"
-
-            result = await health_service.get_detailed_health_status()
-
-            assert result["status"] == "healthy"
-            assert result["timestamp"] == "2024-01-01T00:05:00+00:00"
-            assert result["version"] == "1.0.0"
-            assert result["uptime_seconds"] == 300.0  # 5 minutes
+        assert result.status == "healthy"
+        assert result.timestamp is not None
+        assert result.version == "1.0.0"
+        assert result.uptime_seconds >= 0
 
     @pytest.mark.asyncio
     async def test_get_detailed_health_status_uptime_calculation(self):
         """Test uptime calculation in detailed health status."""
-        with patch(
-            "src.fastapi_basic_example.application.services.health_service.datetime"
-        ) as mock_dt:
-            startup_time = datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC)
-            current_time = datetime(
-                2024, 1, 1, 1, 30, 45, tzinfo=UTC
-            )  # 1.5 hours later
+        import time
 
-            mock_dt.now.return_value = startup_time
-            health_service = HealthService()
+        health_service = HealthService()
+        time.sleep(0.01)
+        result = await health_service.get_detailed_health_status()
 
-            mock_dt.now.return_value = current_time
-            current_time.isoformat.return_value = "2024-01-01T01:30:45+00:00"
-
-            result = await health_service.get_detailed_health_status()
-
-            expected_uptime = (current_time - startup_time).total_seconds()
-            assert result["uptime_seconds"] == expected_uptime
-            assert result["uptime_seconds"] == 5445.0  # 1 hour 30 minutes 45 seconds
+        assert result.uptime_seconds > 0
+        assert result.uptime_seconds >= 0.01

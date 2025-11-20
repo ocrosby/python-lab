@@ -10,3 +10,19 @@ class AppConstants:
         "A FastAPI application demonstrating hexagonal architecture "
         "with DI and structured logging"
     )
+
+
+class HealthConstants:
+    """Health check constants."""
+
+    HEALTHY = "healthy"
+    READY = "ready"
+    ALIVE = "alive"
+    STARTED = "started"
+
+
+class ServerConstants:
+    """Server configuration constants."""
+
+    DEFAULT_HOST = "0.0.0.0"
+    DEFAULT_PORT = 8000

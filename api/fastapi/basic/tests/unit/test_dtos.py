@@ -52,17 +52,19 @@ class TestHealthCheckDTO:
 
     def test_health_check_dto_creation(self):
         """Test creating HealthCheckDTO."""
-        dto = HealthCheckDTO()
+        dto = HealthCheckDTO(status="healthy", timestamp="2025-11-20T00:00:00Z")
 
         assert dto.status == "healthy"
+        assert dto.timestamp == "2025-11-20T00:00:00Z"
 
     def test_health_check_dto_equality(self):
         """Test HealthCheckDTO equality comparison."""
-        dto1 = HealthCheckDTO()
-        dto2 = HealthCheckDTO()
+        dto1 = HealthCheckDTO(status="healthy", timestamp="2025-11-20T00:00:00Z")
+        dto2 = HealthCheckDTO(status="healthy", timestamp="2025-11-20T00:00:00Z")
 
         assert dto1 == dto2
         assert dto1.status == dto2.status
+        assert dto1.timestamp == dto2.timestamp
 
 
 @pytest.mark.unit

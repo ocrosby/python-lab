@@ -18,34 +18,38 @@ class TestAPIWithDI:
         self, client, container, mocker: MockerFixture
     ):
         """Test root endpoint with mocked health service."""
-        # Mock the health service
-        mock_health_service = mocker.MagicMock(spec=HealthService)
-        mock_health_service.get_welcome_message.return_value.message = "Mocked Hello"
-        mock_health_service.get_welcome_message.return_value.version = "1.0.0"
+        from src.fastapi_basic_example.application.dto.item_dto import WelcomeDTO
 
-        # Override the container provider
+        mock_health_service = mocker.MagicMock(spec=HealthService)
+        mock_health_service.get_welcome_message.return_value = WelcomeDTO(
+            Hello="Mocked Hello"
+        )
+
         with container.health_service.override(mock_health_service):
             response = client.get("/")
 
         assert response.status_code == 200
         data = response.json()
-        assert data["message"] == "Mocked Hello"
+        assert data["Hello"] == "Mocked Hello"
 
     def test_health_endpoint_with_mocked_service(
         self, client, container, mocker: MockerFixture
     ):
         """Test health endpoint with mocked service."""
-        # Mock the health service
-        mock_health_service = mocker.MagicMock(spec=HealthService)
-        mock_health_service.get_health_status.return_value.status = "mocked_healthy"
+        from src.fastapi_basic_example.application.dto.item_dto import HealthCheckDTO
 
-        # Override the container provider
+        mock_health_service = mocker.MagicMock(spec=HealthService)
+        mock_health_service.get_health_status.return_value = HealthCheckDTO(
+            status="mocked_healthy", timestamp="2025-11-20T00:00:00Z"
+        )
+
         with container.health_service.override(mock_health_service):
             response = client.get("/health")
 
         assert response.status_code == 200
         data = response.json()
         assert data["status"] == "mocked_healthy"
+        assert data["timestamp"] == "2025-11-20T00:00:00Z"
 
     @pytest.mark.asyncio
     async def test_liveness_probe_with_mocked_service(

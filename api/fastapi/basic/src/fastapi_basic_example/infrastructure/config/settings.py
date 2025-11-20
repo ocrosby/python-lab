@@ -2,20 +2,16 @@
 
 from pydantic import BaseModel
 
-# Constants to eliminate duplication
-APP_NAME = "FastAPI Basic Example"
-APP_VERSION = "1.0.0"
-DEFAULT_HOST = "0.0.0.0"
-DEFAULT_PORT = 8000
+from ...domain.constants import AppConstants, ServerConstants
 
 
 class Settings(BaseModel):
     """Application settings."""
 
-    app_name: str = APP_NAME
-    app_version: str = APP_VERSION
-    host: str = DEFAULT_HOST
-    port: int = DEFAULT_PORT
+    app_name: str = AppConstants.NAME
+    app_version: str = AppConstants.VERSION
+    host: str = ServerConstants.DEFAULT_HOST
+    port: int = ServerConstants.DEFAULT_PORT
     reload: bool = True
 
 

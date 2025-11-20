@@ -22,6 +22,8 @@ wheels/
 .pytest_cache/
 .coverage
 htmlcov/
+coverage.xml
+*.log
 
 .env
 .venv
@@ -33,5 +35,13 @@ venv.bak/
 
 .git
 .gitignore
-README.md
 .DS_Store
+
+tests/
+*.md
+!README.md
+Dockerfile
+docker-compose.yml
+.dockerignore
+.python-version
+tasks.py

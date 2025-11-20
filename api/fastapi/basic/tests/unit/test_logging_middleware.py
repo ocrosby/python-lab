@@ -65,15 +65,12 @@ def test_request_logging_success(mock_logger, client_with_middleware):
 @patch("src.fastapi_basic_example.infrastructure.logging.middleware.logger")
 def test_request_logging_error(mock_logger, client_with_middleware):
     """Test that failed requests are logged correctly."""
-    response = client_with_middleware.get("/error")
+    with pytest.raises(ValueError, match="Test error"):
+        client_with_middleware.get("/error")
 
-    assert response.status_code == 500
+    mock_logger.info.assert_called_once()
+    mock_logger.error.assert_called_once()
 
-    # Check that logger.info was called for request start and logger.error for failure
-    mock_logger.info.assert_called_once()  # Only request started
-    mock_logger.error.assert_called_once()  # Request failed
-
-    # Check the error call
     error_call = mock_logger.error.call_args
     assert "Request failed" in error_call[0]
     assert "error" in error_call[1]

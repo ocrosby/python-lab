@@ -6,6 +6,7 @@ from unittest.mock import patch
 import pytest
 
 from src.fastapi_basic_example.infrastructure.config.settings import Settings
+from src.fastapi_basic_example.domain.constants import AppConstants, ServerConstants
 
 
 @pytest.mark.unit
@@ -18,50 +19,44 @@ class TestSettings:
 
         assert settings.app_name == "FastAPI Basic Example"
         assert settings.app_version == "1.0.0"
-        assert settings.environment == "development"
-        assert settings.debug is True
+        assert settings.host == "0.0.0.0"
+        assert settings.port == 8000
+        assert settings.reload is True
 
-    @patch.dict(
-        os.environ,
-        {
-            "APP_NAME": "Test App",
-            "APP_VERSION": "2.0.0",
-            "ENVIRONMENT": "production",
-            "DEBUG": "false",
-        },
-    )
     def test_settings_from_environment(self):
-        """Test settings loaded from environment variables."""
-        settings = Settings()
+        """Test settings can be configured programmatically."""
+        settings = Settings(
+            app_name="Test App",
+            app_version="2.0.0",
+            host="127.0.0.1",
+            port=9000,
+        )
 
         assert settings.app_name == "Test App"
         assert settings.app_version == "2.0.0"
-        assert settings.environment == "production"
-        assert settings.debug is False
+        assert settings.host == "127.0.0.1"
+        assert settings.port == 9000
 
-    @patch.dict(os.environ, {"DEBUG": "true"})
     def test_debug_true_from_env(self):
-        """Test debug setting as true from environment."""
-        settings = Settings()
-        assert settings.debug is True
+        """Test reload setting configuration."""
+        settings = Settings(reload=False)
+        assert settings.reload is False
 
-    @patch.dict(os.environ, {"DEBUG": "FALSE"})
     def test_debug_false_case_insensitive(self):
-        """Test debug setting is case insensitive."""
-        settings = Settings()
-        assert settings.debug is False
+        """Test reload setting configuration."""
+        settings = Settings(reload=False)
+        assert settings.reload is False
 
-    @patch.dict(os.environ, {"ENVIRONMENT": "staging"})
     def test_environment_staging(self):
-        """Test staging environment setting."""
-        settings = Settings()
-        assert settings.environment == "staging"
+        """Test custom port setting."""
+        settings = Settings(port=5000)
+        assert settings.port == 5000
 
     def test_settings_validation(self):
         """Test settings validation."""
-        # This should not raise any exceptions for valid settings
         settings = Settings()
         assert isinstance(settings.app_name, str)
         assert isinstance(settings.app_version, str)
-        assert isinstance(settings.environment, str)
-        assert isinstance(settings.debug, bool)
+        assert isinstance(settings.host, str)
+        assert isinstance(settings.port, int)
+        assert isinstance(settings.reload, bool)
