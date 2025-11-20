@@ -1,10 +1,9 @@
 """FastAPI application entry point."""
 
-import os
-
 from fastapi import FastAPI
 
 from .domain.constants import AppConstants
+from .infrastructure.config.settings import settings
 from .infrastructure.di.container import Container
 from .infrastructure.logging.config import configure_logging
 from .infrastructure.logging.middleware import RequestLoggingMiddleware
@@ -13,15 +12,13 @@ from .infrastructure.web.routers import router
 
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
-    log_level = os.getenv("LOG_LEVEL", "INFO")
-    use_json_logging = os.getenv("JSON_LOGGING", "false").lower() == "true"
-    configure_logging(log_level=log_level, use_json=use_json_logging)
+    configure_logging(log_level=settings.log_level, use_json=settings.json_logging)
 
     container = Container()
     container.wire(
         modules=[
-            "src.fastapi_basic_example.infrastructure.web.routers",
-            "src.fastapi_basic_example.main",
+            "fastapi_basic_example.infrastructure.web.routers",
+            "fastapi_basic_example.main",
         ]
     )
 

@@ -30,3 +30,10 @@ class WelcomeDTO(BaseModel):
     """Welcome message DTO."""
 
     Hello: str = "World"
+
+
+class ProbeResponseDTO(BaseModel):
+    """Probe response DTO."""
+
+    status: str
+    timestamp: str
