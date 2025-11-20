@@ -1,18 +1,25 @@
 """Query parameters value object."""
 
-from dataclasses import dataclass
+from pydantic import BaseModel, ConfigDict, field_validator
 
 
-@dataclass(frozen=True)
-class QueryParams:
+class QueryParams(BaseModel):
     """Value object for query parameters."""
+
+    model_config = ConfigDict(
+        frozen=True,  # Immutable value object
+        str_strip_whitespace=True,  # Auto-strip strings
+    )
 
     q: str | None = None
 
-    def __post_init__(self):
-        """Validate query parameters."""
-        if self.q is not None and len(self.q.strip()) == 0:
-            object.__setattr__(self, "q", None)
+    @field_validator("q")
+    @classmethod
+    def validate_query(cls, v):
+        """Validate query parameter."""
+        if v is not None and len(v.strip()) == 0:
+            return None
+        return v
 
     @property
     def has_query(self) -> bool:

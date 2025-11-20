@@ -15,11 +15,9 @@ class GetItemUseCase:
         self, item_id: int, query_params: QueryParams | None = None
     ) -> ItemResponseDTO:
         """Execute the get item use case."""
-        if item_id <= 0:
-            raise ValueError("Item ID must be positive")
-
         # For this simple example, we'll just return the item_id and query
         # In a real implementation, you'd fetch from the repository
         q_value = query_params.q if query_params and query_params.has_query else None
 
+        # ItemResponseDTO will validate item_id automatically via Pydantic
         return ItemResponseDTO(item_id=item_id, q=q_value)

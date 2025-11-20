@@ -43,8 +43,7 @@ class TestHealthService:
         result = health_service.get_welcome_message()
 
         assert isinstance(result, WelcomeDTO)
-        assert result.message == "Hello World"
-        assert result.version == "1.0.0"
+        assert result.Hello == "World"
 
     @pytest.mark.asyncio
     async def test_is_alive(self):

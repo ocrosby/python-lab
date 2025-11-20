@@ -9,6 +9,14 @@ from .infrastructure.logging.config import configure_logging
 from .infrastructure.logging.middleware import RequestLoggingMiddleware
 from .infrastructure.web.routers import router
 
+# Constants to eliminate duplication
+APP_NAME = "FastAPI Basic Example"
+APP_VERSION = "1.0.0"
+APP_DESCRIPTION = (
+    "A FastAPI application demonstrating hexagonal architecture "
+    "with DI and structured logging"
+)
+
 
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
@@ -21,19 +29,16 @@ def create_app() -> FastAPI:
     container = Container()
     container.wire(
         modules=[
-            "fastapi_basic_example.infrastructure.web.routers",
-            "fastapi_basic_example.main",
+            "src.fastapi_basic_example.infrastructure.web.routers",
+            "src.fastapi_basic_example.main",
         ]
     )
 
     # Create FastAPI app
     app = FastAPI(
-        title="FastAPI Basic Example",
-        description=(
-            "A FastAPI application demonstrating hexagonal architecture "
-            "with DI and structured logging"
-        ),
-        version="1.0.0",
+        title=APP_NAME,
+        description=APP_DESCRIPTION,
+        version=APP_VERSION,
     )
 
     # Add container to app state for testing access

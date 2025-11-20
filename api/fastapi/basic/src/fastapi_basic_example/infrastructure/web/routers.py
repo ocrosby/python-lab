@@ -11,6 +11,18 @@ from ...application.use_cases.get_item_use_case import GetItemUseCase
 from ...domain.value_objects.query_params import QueryParams
 from ..di.container import Container
 
+# Constants to eliminate duplication
+HEALTHY_STATUS = "healthy"
+READY_STATUS = "ready"
+ALIVE_STATUS = "alive"
+STARTED_STATUS = "started"
+
+
+def get_current_timestamp() -> str:
+    """Get current UTC timestamp in ISO format."""
+    return datetime.now(UTC).isoformat()
+
+
 # Create router
 router = APIRouter()
 
@@ -57,7 +69,7 @@ async def liveness_probe(
     If it fails, Kubernetes will restart the container.
     """
     if await health_service.is_alive():
-        return {"status": "alive", "timestamp": datetime.now(UTC).isoformat()}
+        return {"status": ALIVE_STATUS, "timestamp": get_current_timestamp()}
     else:
         raise HTTPException(status_code=503, detail="Service not alive")
 
@@ -74,7 +86,7 @@ async def readiness_probe(
     If it fails, Kubernetes will stop sending traffic to this instance.
     """
     if await health_service.is_ready():
-        return {"status": "ready", "timestamp": datetime.now(UTC).isoformat()}
+        return {"status": READY_STATUS, "timestamp": get_current_timestamp()}
     else:
         raise HTTPException(status_code=503, detail="Service not ready")
 
@@ -92,8 +104,8 @@ async def startup_probe(
     """
     if await health_service.is_alive():
         return {
-            "status": "started",
-            "timestamp": datetime.now(UTC).isoformat(),
+            "status": STARTED_STATUS,
+            "timestamp": get_current_timestamp(),
         }
     else:
         raise HTTPException(status_code=503, detail="Service not started")

@@ -31,7 +31,7 @@ class TestQueryParams:
         """Test creating QueryParams with empty string."""
         params = QueryParams(q="")
 
-        assert params.q == ""
+        assert params.q is None
 
     def test_query_params_post_init_validation(self):
         """Test QueryParams post-initialization validation."""
@@ -39,9 +39,9 @@ class TestQueryParams:
         params = QueryParams(q="valid query")
         assert params.q == "valid query"
 
-        # Test with whitespace
+        # Test with whitespace - Pydantic now auto-strips whitespace
         params_whitespace = QueryParams(q="  whitespace query  ")
-        assert params_whitespace.q == "  whitespace query  "
+        assert params_whitespace.q == "whitespace query"
 
     def test_query_params_equality(self):
         """Test QueryParams equality comparison."""
@@ -60,8 +60,9 @@ class TestQueryParams:
         params = QueryParams(q="test query")
         str_repr = str(params)
 
-        assert "QueryParams" in str_repr
+        # Pydantic models have a different string representation
         assert "test query" in str_repr
+        assert "q=" in str_repr
 
     def test_query_params_with_special_characters(self):
         """Test QueryParams with special characters."""

@@ -73,8 +73,7 @@ class TestWelcomeDTO:
         """Test creating WelcomeDTO."""
         dto = WelcomeDTO()
 
-        assert dto.message == "Hello World"
-        assert dto.version == "1.0.0"
+        assert dto.Hello == "World"
 
     def test_welcome_dto_equality(self):
         """Test WelcomeDTO equality comparison."""
@@ -82,5 +81,4 @@ class TestWelcomeDTO:
         dto2 = WelcomeDTO()
 
         assert dto1 == dto2
-        assert dto1.message == dto2.message
-        assert dto1.version == dto2.version
+        assert dto1.Hello == dto2.Hello

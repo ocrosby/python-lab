@@ -1,16 +1,21 @@
 """Application settings."""
 
-from dataclasses import dataclass
+from pydantic import BaseModel
+
+# Constants to eliminate duplication
+APP_NAME = "FastAPI Basic Example"
+APP_VERSION = "1.0.0"
+DEFAULT_HOST = "0.0.0.0"
+DEFAULT_PORT = 8000
 
 
-@dataclass
-class Settings:
+class Settings(BaseModel):
     """Application settings."""
 
-    app_name: str = "FastAPI Basic Example"
-    app_version: str = "1.0.0"
-    host: str = "0.0.0.0"
-    port: int = 8000
+    app_name: str = APP_NAME
+    app_version: str = APP_VERSION
+    host: str = DEFAULT_HOST
+    port: int = DEFAULT_PORT
     reload: bool = True
 
 

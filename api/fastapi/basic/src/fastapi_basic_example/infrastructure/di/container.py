@@ -27,5 +27,5 @@ class Container(containers.DeclarativeContainer):
     # Use cases
     get_item_use_case = providers.Factory(
         GetItemUseCase,
-        repository=item_repository,
+        item_repository=item_repository,
     )

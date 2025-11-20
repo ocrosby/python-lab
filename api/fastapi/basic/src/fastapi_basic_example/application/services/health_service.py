@@ -9,13 +9,27 @@ from ..dto.item_dto import HealthCheckDTO, WelcomeDTO
 
 logger = structlog.get_logger(__name__)
 
+# Constants to eliminate duplication
+HEALTHY_STATUS = "healthy"
+APP_VERSION = "1.0.0"
+
+
+def get_current_timestamp() -> str:
+    """Get current UTC timestamp in ISO format."""
+    return datetime.now(UTC).isoformat()
+
+
+def get_current_datetime() -> datetime:
+    """Get current UTC datetime."""
+    return datetime.now(UTC)
+
 
 class HealthService:
     """Service for health checks."""
 
     def __init__(self):
         """Initialize the health service."""
-        self.startup_time = datetime.now(UTC)
+        self.startup_time = get_current_datetime()
         logger.info("Health service initialized", **get_logger_context())
 
     def get_health_status(self) -> HealthCheckDTO:
@@ -30,13 +44,13 @@ class HealthService:
 
     async def get_detailed_health_status(self):
         """Get detailed health status of the application."""
-        uptime_seconds = (datetime.now(UTC) - self.startup_time).total_seconds()
+        uptime_seconds = (get_current_datetime() - self.startup_time).total_seconds()
 
         status = {
-            "status": "healthy",
-            "timestamp": datetime.now(UTC).isoformat(),
+            "status": HEALTHY_STATUS,
+            "timestamp": get_current_timestamp(),
             "uptime_seconds": uptime_seconds,
-            "version": "1.0.0",
+            "version": APP_VERSION,
         }
 
         logger.info(

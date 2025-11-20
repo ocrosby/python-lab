@@ -1,25 +1,22 @@
 """Item DTOs."""
 
-from dataclasses import dataclass
+from pydantic import BaseModel, Field
 
 
-@dataclass
-class ItemResponseDTO:
+class ItemResponseDTO(BaseModel):
     """Item response DTO."""
 
-    item_id: int
+    item_id: int = Field(..., gt=0, description="Item ID must be positive")
     q: str | None = None
 
 
-@dataclass
-class HealthCheckDTO:
+class HealthCheckDTO(BaseModel):
     """Health check response DTO."""
 
     status: str = "healthy"
 
 
-@dataclass
-class WelcomeDTO:
+class WelcomeDTO(BaseModel):
     """Welcome message DTO."""
 
     Hello: str = "World"

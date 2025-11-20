@@ -34,14 +34,14 @@ class TestItem:
         assert item.description is None
 
     def test_item_post_init_validation(self):
-        """Test item post-initialization validation."""
+        """Test Item validation during creation."""
         # This should not raise any exceptions
-        item = Item(item_id=1, name="Valid Item", description="Valid Description")
-        assert item.item_id == 1
+        item_valid = Item(item_id=1, name="Valid Item")
+        assert item_valid.item_id == 1
 
-        # Test with negative ID - should still work as it's just data
-        item_negative = Item(item_id=-1, name="Negative ID Item")
-        assert item_negative.item_id == -1
+        # Test with negative ID - should raise ValidationError with Pydantic
+        with pytest.raises(Exception):  # ValidationError
+            Item(item_id=-1, name="Negative ID Item")
 
     def test_item_equality(self):
         """Test item equality comparison."""
