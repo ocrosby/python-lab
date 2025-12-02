@@ -1,0 +1,55 @@
+Season   | Gender      | Sport                               | URL
+----------------------------------------------------------------------------------------------------
+Fall     | Men         | Cross Country                       | https://www.ncaa.com/sports/cross-country-men
+Fall     | Women       | Cross Country                       | https://www.ncaa.com/sports/cross-country-women
+Fall     | Unspecified | Cross Country                       | -
+Fall     | Unspecified | Field Hockey                        | https://www.ncaa.com/sports/fieldhockey
+Fall     | Unspecified | Football                            | https://www.ncaa.com/sports/football
+Fall     | Men         | Individual Tennis (DI)              | https://www.ncaa.com/sports/tennis-men
+Fall     | Women       | Individual Tennis (DI)              | https://www.ncaa.com/sports/tennis-women
+Fall     | Unspecified | Individual Tennis (DI)              | -
+Fall     | Men         | Soccer                              | https://www.ncaa.com/sports/soccer-men
+Fall     | Women       | Soccer                              | https://www.ncaa.com/sports/soccer-women
+Fall     | Unspecified | Soccer                              | -
+Fall     | Women       | Volleyball                          | https://www.ncaa.com/sports/volleyball-women
+Fall     | Men         | Water Polo                          | https://www.ncaa.com/sports/waterpolo-men
+Winter   | Men         | Basketball                          | https://www.ncaa.com/sports/basketball-men
+Winter   | Women       | Basketball                          | https://www.ncaa.com/sports/basketball-women
+Winter   | Unspecified | Basketball                          | -
+Winter   | Unspecified | Bowling                             | https://www.ncaa.com/sports/bowling
+Winter   | Unspecified | Fencing                             | https://www.ncaa.com/sports/fencing
+Winter   | Men         | Gymnastics                          | https://www.ncaa.com/sports/gymnastics-men
+Winter   | Women       | Gymnastics                          | https://www.ncaa.com/sports/gymnastics-women
+Winter   | Unspecified | Gymnastics                          | -
+Winter   | Men         | Ice Hockey                          | https://www.ncaa.com/sports/icehockey-men
+Winter   | Women       | Ice Hockey                          | https://www.ncaa.com/sports/icehockey-women
+Winter   | Unspecified | Ice Hockey                          | -
+Winter   | Unspecified | Rifle                               | https://www.ncaa.com/sports/rifle
+Winter   | Unspecified | Skiing                              | https://www.ncaa.com/sports/skiing
+Winter   | Men         | Swimming & Diving                   | https://www.ncaa.com/sports/swimming-men
+Winter   | Women       | Swimming & Diving                   | https://www.ncaa.com/sports/swimming-women
+Winter   | Unspecified | Swimming & Diving                   | -
+Winter   | Men         | Track & Field (I)                   | https://www.ncaa.com/sports/trackfield-indoor-men
+Winter   | Women       | Track & Field (I)                   | https://www.ncaa.com/sports/trackfield-indoor-women
+Winter   | Unspecified | Track & Field (I)                   | -
+Winter   | Men         | Wrestling                           | https://www.ncaa.com/sports/wrestling-men
+Winter   | Women       | Wrestling                           | https://www.ncaa.com/sports/wrestling-women
+Winter   | Unspecified | Wrestling                           | -
+Spring   | Unspecified | Baseball                            | https://www.ncaa.com/sports/baseball
+Spring   | Unspecified | Beach Volleyball                    | https://www.ncaa.com/sports/beach-volleyball
+Spring   | Men         | Golf                                | https://www.ncaa.com/sports/golf-men
+Spring   | Women       | Golf                                | https://www.ncaa.com/sports/golf-women
+Spring   | Unspecified | Golf                                | -
+Spring   | Men         | Lacrosse                            | https://www.ncaa.com/sports/lacrosse-men
+Spring   | Women       | Lacrosse                            | https://www.ncaa.com/sports/lacrosse-women
+Spring   | Unspecified | Lacrosse                            | -
+Spring   | Unspecified | Rowing                              | https://www.ncaa.com/sports/rowing
+Spring   | Unspecified | Softball                            | https://www.ncaa.com/sports/softball
+Spring   | Men         | Tennis                              | https://www.ncaa.com/sports/tennis-men
+Spring   | Women       | Tennis                              | https://www.ncaa.com/sports/tennis-women
+Spring   | Unspecified | Tennis                              | -
+Spring   | Men         | Track & Field (O)                   | https://www.ncaa.com/sports/trackfield-outdoor-men
+Spring   | Women       | Track & Field (O)                   | https://www.ncaa.com/sports/trackfield-outdoor-women
+Spring   | Unspecified | Track & Field (O)                   | -
+Spring   | Men         | Volleyball                          | https://www.ncaa.com/sports/volleyball-men
+Spring   | Women       | Water Polo                          | https://www.ncaa.com/sports/waterpolo-women
