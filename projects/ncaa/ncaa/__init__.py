@@ -18,7 +18,7 @@ def __getattr__(name):
     Lazy import for backward compatibility.
     Allows imports like: from ncaa import BasketballService
     """
-    _MODULE_ALIASES = {
+    _MODULE_ALIASES = {  # noqa: N806
         "casablanca_client": "api.client",
         "casablanca_models": "api.models",
         "casablanca_service": "api.service",
@@ -43,7 +43,7 @@ def __getattr__(name):
         "interfaces": "core.interfaces",
     }
 
-    _DEPRECATED_IMPORTS = {
+    _DEPRECATED_IMPORTS = {  # noqa: N806
         "BasketballService": ("api.services", "BasketballService"),
         "ScheduleService": ("api.services", "ScheduleService"),
         "CasablancaClient": ("api.client", "CasablancaClient"),
