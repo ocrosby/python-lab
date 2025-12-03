@@ -1,14 +1,14 @@
 from invoke import task
 
 
-@task
+@task(aliases=["t"])
 def test(c):
     """Run pytest unit tests"""
     print("Running pytest unit tests...")
     c.run("uv run pytest tests/ -v", pty=True)
 
 
-@task
+@task(aliases=["f"])
 def format(c):
     """Format code with ruff"""
     print("Formatting code with ruff...")
@@ -16,7 +16,7 @@ def format(c):
     print("✓ Code formatting complete")
 
 
-@task(format)
+@task(format, aliases=["l"])
 def lint(c):
     """Lint code with ruff (depends on format task)"""
     print("Linting code with ruff...")
@@ -24,7 +24,7 @@ def lint(c):
     print("✓ Linting complete")
 
 
-@task
+@task(aliases=["c"])
 def clean(c):
     """Clean up build artifacts and cache files"""
     print("Cleaning build artifacts...")
@@ -34,7 +34,7 @@ def clean(c):
     print("✓ Cleanup complete")
 
 
-@task(pre=[format, lint, test])
+@task(pre=[format, lint, test], aliases=["b"])
 def build(c):
     """Run format, lint, and test tasks"""
     print("✓ Build complete - all checks passed!")
