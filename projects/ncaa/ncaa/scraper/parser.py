@@ -5,10 +5,10 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup, Tag
 
-from .config import NCAA_BASE_URL
-from .constants import CssSelector
-from .models import Gender, Season, Sport
-from .parser_helpers import (
+from ..core.config import NCAA_BASE_URL
+from ..core.constants import CssSelector
+from ..scraper.models import Gender, Season, Sport
+from ..scraper.parser_helpers import (
     extract_gender,
     extract_season_name,
     map_season,
@@ -136,7 +136,7 @@ def parse_sports(
           * If Men/Women exist -> do NOT include the UNSPECIFIED parent entry
     """
     if gender_resolver is None:
-        from .gender_resolver import DefaultGenderResolver
+        from ..scraper.gender_resolver import DefaultGenderResolver
 
         gender_resolver = DefaultGenderResolver()
 

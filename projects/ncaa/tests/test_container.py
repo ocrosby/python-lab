@@ -1,15 +1,15 @@
 import pytest
 
-from ncaa.basketball_service import BasketballService
-from ncaa.container import Container
-from ncaa.decorators import CachedCasablancaClient
-from ncaa.game_filters import CompletedGameFilter, LiveGameFilter, ScheduledGameFilter
-from ncaa.gender_resolver import DefaultGenderResolver
-from ncaa.html_fetcher import RequestsHtmlFetcher
-from ncaa.interfaces import ICasablancaClient
-from ncaa.schedule_helpers import ScheduleHelper
-from ncaa.schedule_service import ScheduleService
-from ncaa.service import NcaaSportsService
+from ncaa.api.filters import CompletedGameFilter, LiveGameFilter, ScheduledGameFilter
+from ncaa.api.helpers import ScheduleHelper
+from ncaa.api.services.basketball import BasketballService
+from ncaa.api.services.schedule import ScheduleService
+from ncaa.core.interfaces import ICasablancaClient
+from ncaa.infrastructure.container import Container
+from ncaa.infrastructure.decorators import CachedCasablancaClient
+from ncaa.scraper.fetcher import RequestsHtmlFetcher
+from ncaa.scraper.gender_resolver import DefaultGenderResolver
+from ncaa.scraper.service import NcaaSportsService
 
 
 @pytest.fixture

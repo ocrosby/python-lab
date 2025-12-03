@@ -1,20 +1,20 @@
 from dependency_injector import containers, providers
 
-from .basketball_service import BasketballService
-from .casablanca_client import CasablancaClient
-from .config import (
+from ..api.client import CasablancaClient
+from ..api.filters import CompletedGameFilter, LiveGameFilter, ScheduledGameFilter
+from ..api.helpers import ScheduleHelper
+from ..api.services.basketball import BasketballService
+from ..api.services.schedule import ScheduleService
+from ..core.config import (
     CASABLANCA_SCHEDULE_BASE_URL,
     CASABLANCA_SCOREBOARD_BASE_URL,
 )
-from .constants import DEFAULT_TIMEOUT
-from .decorators import CachedCasablancaClient
-from .factories import ClientFactory, FilterFactory
-from .game_filters import CompletedGameFilter, LiveGameFilter, ScheduledGameFilter
-from .gender_resolver import DefaultGenderResolver
-from .html_fetcher import RequestsHtmlFetcher
-from .schedule_helpers import ScheduleHelper
-from .schedule_service import ScheduleService
-from .service import NcaaSportsService
+from ..core.constants import DEFAULT_TIMEOUT
+from ..infrastructure.decorators import CachedCasablancaClient
+from ..infrastructure.factories import ClientFactory, FilterFactory
+from ..scraper.fetcher import RequestsHtmlFetcher
+from ..scraper.gender_resolver import DefaultGenderResolver
+from ..scraper.service import NcaaSportsService
 
 
 class Container(containers.DeclarativeContainer):

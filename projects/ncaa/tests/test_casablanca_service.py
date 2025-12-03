@@ -1,7 +1,7 @@
 import pytest
 
-from ncaa.casablanca_client import CasablancaClient
-from ncaa.casablanca_models import (
+from ncaa.api.client import CasablancaClient
+from ncaa.api.models import (
     Game,
     GameState,
     GameWrapper,
@@ -9,7 +9,7 @@ from ncaa.casablanca_models import (
     Team,
     TeamNames,
 )
-from ncaa.casablanca_service import CasablancaService
+from ncaa.api.service import CasablancaService
 
 
 @pytest.fixture
@@ -61,7 +61,7 @@ def test_init_with_client(mock_client):
 
 
 def test_init_without_client():
-    from ncaa.casablanca_service import get_casablanca_service
+    from ncaa.api.service import get_casablanca_service
 
     service = get_casablanca_service()
     assert isinstance(service.basketball.client, CasablancaClient)

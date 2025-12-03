@@ -1,18 +1,18 @@
 import pytest
 
-from ncaa.casablanca_models import (
+from ncaa.api.filters import (
+    ConferenceFilter,
+    FilterChain,
+    LiveGameFilter,
+    TeamFilter,
+)
+from ncaa.api.models import (
     Conference,
     Game,
     GameState,
     GameWrapper,
     Team,
     TeamNames,
-)
-from ncaa.game_filters import (
-    ConferenceFilter,
-    FilterChain,
-    LiveGameFilter,
-    TeamFilter,
 )
 
 

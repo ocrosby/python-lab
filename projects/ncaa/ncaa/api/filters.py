@@ -1,4 +1,4 @@
-from .casablanca_models import GameState, GameWrapper
+from .models import GameState, GameWrapper
 
 
 class LiveGameFilter:

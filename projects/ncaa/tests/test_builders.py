@@ -1,12 +1,12 @@
 import pytest
 
-from ncaa.builders import ScheduleQueryBuilder, ScoreboardQueryBuilder
-from ncaa.casablanca_models import ScheduleResponse, ScoreboardResponse
+from ncaa.api.builders import ScheduleQueryBuilder, ScoreboardQueryBuilder
+from ncaa.api.models import ScheduleResponse, ScoreboardResponse
 
 
 @pytest.fixture
 def mock_client(mocker):
-    from ncaa.casablanca_client import CasablancaClient
+    from ncaa.api.client import CasablancaClient
 
     return mocker.Mock(spec=CasablancaClient)
 

@@ -1,6 +1,6 @@
 import pytest
 
-from ncaa.casablanca_models import (
+from ncaa.api.models import (
     Conference,
     Game,
     GameState,

@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-from ncaa.html_fetcher import RequestsHtmlFetcher
+from ncaa.scraper.fetcher import RequestsHtmlFetcher
 
 
 def test_requests_html_fetcher_success(mocker):

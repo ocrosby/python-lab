@@ -1,5 +1,5 @@
-from .config import build_sport_name
-from .constants import SportName
+from ..core.config import build_sport_name
+from ..core.constants import SportName
 
 
 class SportNameBuilder:

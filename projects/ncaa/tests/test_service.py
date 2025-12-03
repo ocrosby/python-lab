@@ -2,8 +2,12 @@ from unittest.mock import Mock
 
 import pytest
 
-from ncaa.models import Gender, Season, Sport
-from ncaa.service import NcaaSportsService, NcaaSportsServiceError, get_ncaa_sports
+from ncaa.scraper.models import Gender, Season, Sport
+from ncaa.scraper.service import (
+    NcaaSportsService,
+    NcaaSportsServiceError,
+    get_ncaa_sports,
+)
 
 
 @pytest.fixture

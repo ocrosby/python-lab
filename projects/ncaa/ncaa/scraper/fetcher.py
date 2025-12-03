@@ -1,4 +1,4 @@
-from .constants import DEFAULT_TIMEOUT
+from ..core.constants import DEFAULT_TIMEOUT
 
 
 class RequestsHtmlFetcher:

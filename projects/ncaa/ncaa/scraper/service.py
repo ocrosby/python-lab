@@ -1,7 +1,7 @@
-from .config import NCAA_BASE_URL
-from .interfaces import IGenderResolver, IHtmlFetcher
-from .models import Sport
-from .parser import parse_sports
+from ..core.config import NCAA_BASE_URL
+from ..core.interfaces import IGenderResolver, IHtmlFetcher
+from ..scraper.models import Sport
+from ..scraper.parser import parse_sports
 
 
 class NcaaSportsServiceError(RuntimeError):
@@ -32,7 +32,7 @@ class NcaaSportsService:
 
 
 def get_ncaa_sports(fetcher: IHtmlFetcher | None = None) -> list[Sport]:
-    from .html_fetcher import RequestsHtmlFetcher
+    from ..scraper.fetcher import RequestsHtmlFetcher
 
     if fetcher is None:
         fetcher = RequestsHtmlFetcher()

@@ -1,10 +1,9 @@
-from typing import Protocol, runtime_checkable
+from __future__ import annotations
 
-from .casablanca_models import (
-    GameWrapper,
-    ScheduleResponse,
-    ScoreboardResponse,
-)
+from typing import TYPE_CHECKING, Protocol, runtime_checkable
+
+if TYPE_CHECKING:
+    from ..api.models import GameWrapper, ScheduleResponse, ScoreboardResponse
 
 
 @runtime_checkable

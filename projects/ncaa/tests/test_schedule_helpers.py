@@ -1,6 +1,7 @@
 import pytest
 
-from ncaa.casablanca_models import (
+from ncaa.api.helpers import ScheduleHelper
+from ncaa.api.models import (
     Game,
     GameState,
     GameWrapper,
@@ -8,7 +9,6 @@ from ncaa.casablanca_models import (
     Team,
     TeamNames,
 )
-from ncaa.schedule_helpers import ScheduleHelper
 
 
 @pytest.fixture

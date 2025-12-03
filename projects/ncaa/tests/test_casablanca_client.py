@@ -1,8 +1,8 @@
 import pytest
 import requests
 
-from ncaa.casablanca_client import CasablancaClient, CasablancaClientError
-from ncaa.casablanca_models import ScheduleResponse, ScoreboardResponse
+from ncaa.api.client import CasablancaClient, CasablancaClientError
+from ncaa.api.models import ScheduleResponse, ScoreboardResponse
 
 
 @pytest.fixture

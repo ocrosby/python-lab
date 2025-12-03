@@ -1,5 +1,5 @@
-from ncaa.gender_resolver import DefaultGenderResolver, GenderResolver
-from ncaa.models import Gender
+from ncaa.scraper.gender_resolver import DefaultGenderResolver, GenderResolver
+from ncaa.scraper.models import Gender
 
 
 def test_default_gender_resolver_interface():

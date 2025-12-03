@@ -1,9 +1,9 @@
-from .casablanca_models import GameWrapper, ScheduleResponse, ScoreboardResponse
-from .config import get_today_date_string
-from .constants import DEFAULT_DIVISION
-from .game_filters import LiveGameFilter
-from .interfaces import ICasablancaClient, IGameFilter, IScheduleHelper
-from .sport_name_builder import SportNameBuilder
+from ...core.config import get_today_date_string
+from ...core.constants import DEFAULT_DIVISION
+from ...core.interfaces import ICasablancaClient, IGameFilter, IScheduleHelper
+from ..filters import LiveGameFilter
+from ..models import GameWrapper, ScheduleResponse, ScoreboardResponse
+from ..sport_name_builder import SportNameBuilder
 
 
 class BasketballService:

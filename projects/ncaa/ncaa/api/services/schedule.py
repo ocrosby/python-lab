@@ -1,7 +1,7 @@
-from .casablanca_models import GameWrapper, ScheduleResponse
-from .constants import DEFAULT_DIVISION
-from .interfaces import ICasablancaClient, IScheduleHelper
-from .sport_name_builder import SportNameBuilder
+from ...core.constants import DEFAULT_DIVISION
+from ...core.interfaces import ICasablancaClient, IScheduleHelper
+from ..models import GameWrapper, ScheduleResponse
+from ..sport_name_builder import SportNameBuilder
 
 
 class ScheduleService:

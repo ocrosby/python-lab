@@ -1,17 +1,17 @@
 from typing import Any
 
-from .casablanca_client import CasablancaClient
-from .config import CASABLANCA_SCHEDULE_BASE_URL, CASABLANCA_SCOREBOARD_BASE_URL
-from .constants import DEFAULT_TIMEOUT
-from .decorators import CachedCasablancaClient, LoggingCasablancaClient
-from .game_filters import (
+from ..api.client import CasablancaClient
+from ..api.filters import (
     CompletedGameFilter,
     ConferenceFilter,
     LiveGameFilter,
     ScheduledGameFilter,
     TeamFilter,
 )
-from .interfaces import ICasablancaClient
+from ..core.config import CASABLANCA_SCHEDULE_BASE_URL, CASABLANCA_SCOREBOARD_BASE_URL
+from ..core.constants import DEFAULT_TIMEOUT
+from ..core.interfaces import ICasablancaClient
+from ..infrastructure.decorators import CachedCasablancaClient, LoggingCasablancaClient
 
 
 class ClientFactory:

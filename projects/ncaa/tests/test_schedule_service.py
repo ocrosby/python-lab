@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from ncaa.casablanca_models import (
+from ncaa.api.models import (
     Game,
     GameState,
     GameWrapper,
@@ -10,8 +10,8 @@ from ncaa.casablanca_models import (
     Team,
     TeamNames,
 )
-from ncaa.constants import DEFAULT_DIVISION
-from ncaa.schedule_service import ScheduleService
+from ncaa.api.services.schedule import ScheduleService
+from ncaa.core.constants import DEFAULT_DIVISION
 
 
 @pytest.fixture

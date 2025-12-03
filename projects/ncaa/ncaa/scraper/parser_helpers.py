@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .models import Gender, Season
+from ..scraper.models import Gender, Season
 
 
 def extract_gender(raw_name: str) -> Gender:
@@ -70,7 +70,7 @@ def apply_default_gender(sport_name: str, gender: Gender) -> Gender:
     Deprecated: Use DefaultGenderResolver directly instead.
     """
     try:
-        from .gender_resolver import DefaultGenderResolver
+        from ..scraper.gender_resolver import DefaultGenderResolver
     except ImportError:
         from gender_resolver import DefaultGenderResolver
 
@@ -82,7 +82,7 @@ def apply_default_gender(sport_name: str, gender: Gender) -> Gender:
 
 
 def extract_season_name(season_block) -> str | None:
-    from .constants import CssSelector
+    from ..core.constants import CssSelector
 
     header = season_block.select_one(CssSelector.SEASON_HEADER.value)
     if header is None:

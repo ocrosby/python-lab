@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from .models import Gender
+from ..scraper.models import Gender
 
 
 class GenderResolver(ABC):

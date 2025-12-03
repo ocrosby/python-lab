@@ -2,8 +2,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from ncaa.basketball_service import BasketballService
-from ncaa.casablanca_models import (
+from ncaa.api.filters import LiveGameFilter
+from ncaa.api.models import (
     Game,
     GameState,
     GameWrapper,
@@ -12,8 +12,8 @@ from ncaa.casablanca_models import (
     Team,
     TeamNames,
 )
-from ncaa.constants import DEFAULT_DIVISION
-from ncaa.game_filters import LiveGameFilter
+from ncaa.api.services.basketball import BasketballService
+from ncaa.core.constants import DEFAULT_DIVISION
 
 
 @pytest.fixture

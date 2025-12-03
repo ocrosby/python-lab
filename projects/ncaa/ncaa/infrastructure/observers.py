@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from .casablanca_models import ScheduleResponse, ScoreboardResponse
-from .constants import DEFAULT_DIVISION
-from .interfaces import ICasablancaClient
+from ..api.models import ScheduleResponse, ScoreboardResponse
+from ..core.constants import DEFAULT_DIVISION
+from ..core.interfaces import ICasablancaClient
 
 
 class DataObserver(ABC):

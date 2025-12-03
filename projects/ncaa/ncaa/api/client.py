@@ -1,7 +1,6 @@
 import requests
 
-from .casablanca_models import ScheduleResponse, ScoreboardResponse
-from .config import (
+from ..core.config import (
     CASABLANCA_SCHEDULE_BASE_URL,
     CASABLANCA_SCOREBOARD_BASE_URL,
     build_schedule_url,
@@ -9,7 +8,8 @@ from .config import (
     format_date_offset,
     get_today_date_string,
 )
-from .constants import DEFAULT_DIVISION, DEFAULT_TIMEOUT
+from ..core.constants import DEFAULT_DIVISION, DEFAULT_TIMEOUT
+from .models import ScheduleResponse, ScoreboardResponse
 
 
 class CasablancaClientError(RuntimeError):

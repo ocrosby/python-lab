@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from ncaa.config import (
+from ncaa.core.config import (
     CASABLANCA_SCHEDULE_BASE_URL,
     CASABLANCA_SCOREBOARD_BASE_URL,
     NCAA_BASE_URL,

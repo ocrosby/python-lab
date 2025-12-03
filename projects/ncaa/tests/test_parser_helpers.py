@@ -1,8 +1,8 @@
 import pytest
 from bs4 import BeautifulSoup
 
-from ncaa.models import Gender, Season
-from ncaa.parser_helpers import (
+from ncaa.scraper.models import Gender, Season
+from ncaa.scraper.parser_helpers import (
     _strip_suffix,
     _strip_suffix_case_insensitive,
     apply_default_gender,

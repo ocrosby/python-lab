@@ -1,11 +1,11 @@
-from .basketball_service import BasketballService
-from .casablanca_models import (
+from ..core.constants import DEFAULT_DIVISION
+from ..core.interfaces import ICasablancaClient
+from .helpers import ScheduleHelper
+from .models import (
     ScoreboardResponse,
 )
-from .constants import DEFAULT_DIVISION
-from .interfaces import ICasablancaClient
-from .schedule_helpers import ScheduleHelper
-from .schedule_service import ScheduleService
+from .services.basketball import BasketballService
+from .services.schedule import ScheduleService
 
 
 class CasablancaService:
@@ -35,7 +35,7 @@ def get_casablanca_service(
     client: ICasablancaClient | None = None,
 ) -> CasablancaService:
     if client is None:
-        from .casablanca_client import CasablancaClient
+        from .client import CasablancaClient
 
         client = CasablancaClient()
     return CasablancaService(client)

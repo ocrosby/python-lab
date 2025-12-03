@@ -1,7 +1,7 @@
-from .casablanca_models import ScheduleResponse, ScoreboardResponse
-from .config import get_today_date_string
-from .constants import DEFAULT_DIVISION
-from .interfaces import ICasablancaClient
+from ..core.config import get_today_date_string
+from ..core.constants import DEFAULT_DIVISION
+from ..core.interfaces import ICasablancaClient
+from .models import ScheduleResponse, ScoreboardResponse
 
 
 class ScheduleQueryBuilder:

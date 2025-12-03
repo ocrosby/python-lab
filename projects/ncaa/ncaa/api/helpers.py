@@ -1,4 +1,4 @@
-from .casablanca_models import GameWrapper, ScheduleResponse
+from .models import GameWrapper, ScheduleResponse
 
 
 class ScheduleHelper:

@@ -1,8 +1,8 @@
 import pytest
 from bs4 import BeautifulSoup
 
-from ncaa.models import Gender, Season
-from ncaa.parser import (
+from ncaa.scraper.models import Gender, Season
+from ncaa.scraper.parser import (
     ParsedSportData,
     _create_sports_from_group,
     _find_sports_nav,

@@ -1,5 +1,5 @@
 import pytest
-from ncaa.container import Container
+from ncaa.infrastructure.container import Container
 
 
 @pytest.fixture(scope="session")
