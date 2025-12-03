@@ -1,10 +1,6 @@
-# ncaa_sports/parser_helpers.py
-
 from __future__ import annotations
 
-from typing import Optional
-
-from .models import Season, Gender
+from .models import Gender, Season
 
 
 def extract_gender(raw_name: str) -> Gender:
@@ -26,6 +22,23 @@ def extract_gender(raw_name: str) -> Gender:
     return Gender.UNSPECIFIED
 
 
+def _strip_suffix(text: str, suffix: str) -> str:
+    if text.endswith(suffix):
+        return text[: -len(suffix)].rstrip()
+    return text
+
+
+def _strip_suffix_case_insensitive(text: str, suffix: str) -> str:
+    lower_text = text.lower()
+    lower_suffix = suffix.lower()
+
+    if lower_text.endswith(lower_suffix):
+        idx = lower_text.rfind(lower_suffix)
+        return text[:idx].rstrip()
+
+    return text
+
+
 def normalize_sport_name(raw_name: str, gender: Gender) -> str:
     """
     Strip ' - Men' or ' - Women' from the end of the name when gender is known.
@@ -39,34 +52,12 @@ def normalize_sport_name(raw_name: str, gender: Gender) -> str:
         return raw_name
 
     suffix = f" - {gender.value}"
-    if raw_name.endswith(suffix):
-        return raw_name[: -len(suffix)].rstrip()
+    normalized = _strip_suffix(raw_name, suffix)
 
-    # Defensive: case-insensitive variant
-    suffix_lower = suffix.lower()
-    lower = raw_name.lower()
-    if lower.endswith(suffix_lower):
-        idx = lower.rfind(suffix_lower)
-        return raw_name[:idx].rstrip()
+    if normalized == raw_name:
+        normalized = _strip_suffix_case_insensitive(raw_name, suffix)
 
-    return raw_name
-
-
-# --- NEW: domain-specific default genders -------------------------------
-
-_DEFAULT_GENDER_BY_SPORT: dict[str, Gender] = {
-    "softball": Gender.WOMEN,
-    "baseball": Gender.MEN,
-    "field hockey": Gender.WOMEN,
-    "rowing": Gender.WOMEN,
-    "bowling": Gender.WOMEN,
-    "beach volleyball": Gender.WOMEN,
-    "rifle": Gender.COED,
-    "skiing": Gender.COED,
-    "football": Gender.MEN,
-    "fencing": Gender.COED,
-    # add more as needed
-}
+    return normalized
 
 
 def apply_default_gender(sport_name: str, gender: Gender) -> Gender:
@@ -75,20 +66,25 @@ def apply_default_gender(sport_name: str, gender: Gender) -> Gender:
     (e.g., Softball -> Women, Baseball -> Men).
 
     If gender is already Men/Women from the text, we keep it.
-    """
-    if gender is not Gender.UNSPECIFIED:
-        return gender
 
-    key = sport_name.strip().lower()
-    default = _DEFAULT_GENDER_BY_SPORT.get(key)
-    return default or gender
+    Deprecated: Use DefaultGenderResolver directly instead.
+    """
+    try:
+        from .gender_resolver import DefaultGenderResolver
+    except ImportError:
+        from gender_resolver import DefaultGenderResolver
+
+    resolver = DefaultGenderResolver()
+    return resolver.resolve(sport_name, gender)
 
 
 # --- Season helpers (unchanged) ----------------------------------------
 
 
-def extract_season_name(season_block) -> Optional[str]:
-    header = season_block.select_one(".season-header")
+def extract_season_name(season_block) -> str | None:
+    from .constants import CssSelector
+
+    header = season_block.select_one(CssSelector.SEASON_HEADER.value)
     if header is None:
         return None
     text = header.get_text(strip=True)

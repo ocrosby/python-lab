@@ -12,91 +12,121 @@ from ncaa import get_ncaa_sports, Sport
 
 
 def extract_ncaa_sports(**context):
-    sports = get_ncaa_sports()
-    sports_data = [
-        {
-            'name': sport.name,
-            'season': sport.season.value,
-            'gender': sport.gender.value,
-            'url': str(sport.url) if sport.url else None
-        }
-        for sport in sports
-    ]
+    try:
+        sports = get_ncaa_sports()
+        sports_data = [
+            {
+                'name': sport.name,
+                'season': sport.season.value,
+                'gender': sport.gender.value,
+                'url': str(sport.url) if sport.url else None
+            }
+            for sport in sports
+        ]
+        
+        data_dir = Path('/opt/airflow/data')
+        data_dir.mkdir(exist_ok=True)
+        
+        output_file = data_dir / f"ncaa_sports_{context['ds']}.json"
+        with open(output_file, 'w') as f:
+            json.dump(sports_data, f, indent=2)
+        
+        context['task_instance'].xcom_push(key='sports_count', value=len(sports_data))
+        context['task_instance'].xcom_push(key='output_file', value=str(output_file))
+        
+        return len(sports_data)
     
-    data_dir = Path('/opt/airflow/data')
-    data_dir.mkdir(exist_ok=True)
-    
-    output_file = data_dir / f"ncaa_sports_{context['ds']}.json"
-    with open(output_file, 'w') as f:
-        json.dump(sports_data, f, indent=2)
-    
-    context['task_instance'].xcom_push(key='sports_count', value=len(sports_data))
-    context['task_instance'].xcom_push(key='output_file', value=str(output_file))
-    
-    return len(sports_data)
+    except Exception as exc:
+        raise RuntimeError(f"Failed to extract NCAA sports: {exc}") from exc
 
 
 def transform_and_load(**context):
-    sports_count = context['task_instance'].xcom_pull(
-        task_ids='extract_sports',
-        key='sports_count'
-    )
-    output_file = context['task_instance'].xcom_pull(
-        task_ids='extract_sports',
-        key='output_file'
-    )
-    
-    with open(output_file, 'r') as f:
-        sports_data = json.load(f)
-    
-    conn_string = os.environ['NCAA_DB_CONN']
-    hook = PostgresHook(postgres_conn_id='ncaa_db')
-    
-    insert_query = """
-        INSERT INTO ncaa_sports (name, season, gender, url, extracted_at)
-        VALUES (%s, %s, %s, %s, %s)
-        ON CONFLICT (name, season, gender) 
-        DO UPDATE SET 
-            url = EXCLUDED.url,
-            extracted_at = EXCLUDED.extracted_at;
-    """
-    
-    extracted_at = context['ds']
-    for sport in sports_data:
-        hook.run(
-            insert_query,
-            parameters=(
-                sport['name'],
-                sport['season'],
-                sport['gender'],
-                sport['url'],
-                extracted_at
-            )
+    try:
+        sports_count = context['task_instance'].xcom_pull(
+            task_ids='extract_sports',
+            key='sports_count'
         )
+        output_file = context['task_instance'].xcom_pull(
+            task_ids='extract_sports',
+            key='output_file'
+        )
+        
+        if not output_file or not Path(output_file).exists():
+            raise FileNotFoundError(f"Output file not found: {output_file}")
+        
+        with open(output_file, 'r') as f:
+            sports_data = json.load(f)
+        
+        hook = PostgresHook(postgres_conn_id='ncaa_db')
+        
+        insert_query = """
+            INSERT INTO ncaa_sports (name, season, gender, url, extracted_at)
+            VALUES (%s, %s, %s, %s, %s)
+            ON CONFLICT (name, season, gender) 
+            DO UPDATE SET 
+                url = EXCLUDED.url,
+                extracted_at = EXCLUDED.extracted_at;
+        """
+        
+        extracted_at = context['ds']
+        conn = hook.get_conn()
+        
+        try:
+            with conn.cursor() as cursor:
+                for sport in sports_data:
+                    cursor.execute(
+                        insert_query,
+                        (
+                            sport['name'],
+                            sport['season'],
+                            sport['gender'],
+                            sport['url'],
+                            extracted_at
+                        )
+                    )
+                conn.commit()
+        except Exception as db_error:
+            conn.rollback()
+            raise RuntimeError(f"Database transaction failed: {db_error}") from db_error
+        finally:
+            conn.close()
+        
+        return sports_count
     
-    return sports_count
+    except FileNotFoundError as fnf_error:
+        raise RuntimeError(f"File error in transform_and_load: {fnf_error}") from fnf_error
+    except json.JSONDecodeError as json_error:
+        raise RuntimeError(f"JSON parsing error: {json_error}") from json_error
+    except Exception as exc:
+        raise RuntimeError(f"Unexpected error in transform_and_load: {exc}") from exc
 
 
 def validate_data(**context):
-    hook = PostgresHook(postgres_conn_id='ncaa_db')
-    
-    result = hook.get_first(
-        "SELECT COUNT(*) FROM ncaa_sports WHERE extracted_at = %s",
-        parameters=(context['ds'],)
-    )
-    
-    count = result[0] if result else 0
-    expected_count = context['task_instance'].xcom_pull(
-        task_ids='extract_sports',
-        key='sports_count'
-    )
-    
-    if count != expected_count:
-        raise ValueError(
-            f"Validation failed: expected {expected_count} records, found {count}"
+    try:
+        hook = PostgresHook(postgres_conn_id='ncaa_db')
+        
+        result = hook.get_first(
+            "SELECT COUNT(*) FROM ncaa_sports WHERE extracted_at = %s",
+            parameters=(context['ds'],)
         )
+        
+        count = result[0] if result else 0
+        expected_count = context['task_instance'].xcom_pull(
+            task_ids='extract_sports',
+            key='sports_count'
+        )
+        
+        if count != expected_count:
+            raise ValueError(
+                f"Validation failed: expected {expected_count} records, found {count}"
+            )
+        
+        return count
     
-    return count
+    except ValueError:
+        raise
+    except Exception as exc:
+        raise RuntimeError(f"Validation error: {exc}") from exc
 
 
 default_args = {

@@ -6,6 +6,7 @@ A Python library and Apache Airflow pipeline for extracting, transforming, and l
 
 - **CLI Tool**: Command-line interface for querying NCAA sports
 - **Python Library**: Reusable modules for HTTP fetching, parsing, and data modeling
+- **Casablanca API Integration**: Access live scores, schedules, and game data for basketball, football, and more
 - **Airflow DAG**: Automated ETL pipeline with PostgreSQL storage
 - **Docker Setup**: Containerized Airflow environment with local data persistence
 
@@ -55,6 +56,8 @@ python main.py sports --gender Women
 
 ### Using the Library
 
+#### NCAA Sports Scraper
+
 ```python
 from ncaa import get_ncaa_sports, Season, Gender
 
@@ -63,6 +66,22 @@ sports = get_ncaa_sports()
 for sport in sports:
     print(f"{sport.season.value} | {sport.gender.value} | {sport.name}")
 ```
+
+#### Casablanca API (Live Scores & Schedules)
+
+```python
+from ncaa import get_casablanca_service
+
+service = get_casablanca_service()
+
+# Get today's men's basketball games
+scoreboard = service.get_todays_mens_basketball_games()
+for game_wrapper in scoreboard.games:
+    game = game_wrapper.game
+    print(f"{game.away.names.short} @ {game.home.names.short}: {game.away.score}-{game.home.score}")
+```
+
+For more details, see [README-CASABLANCA.md](README-CASABLANCA.md)
 
 ## Airflow Setup
 
@@ -152,6 +171,8 @@ pytest tests/
 
 ## Documentation
 
+- [README-CASABLANCA.md](README-CASABLANCA.md) - Casablanca API integration guide
+- [casablanca.md](casablanca.md) - Detailed Casablanca API documentation
 - [README-AIRFLOW.md](README-AIRFLOW.md) - Airflow setup and configuration
 - [README-DAG.md](README-DAG.md) - ETL DAG documentation
 
