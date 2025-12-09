@@ -1,6 +1,6 @@
 import pytest
 from testcontainers.core.container import DockerContainer
-from testcontainers.core.waiting_strategies import wait_for_logs
+from testcontainers.core.wait_strategies import LogMessageWaitStrategy
 import httpx
 
 
@@ -10,10 +10,9 @@ def api_container():
         DockerContainer("project1:latest")
         .with_exposed_ports(8000)
         .with_env("PYTHONUNBUFFERED", "1")
+        .waiting_for(LogMessageWaitStrategy("Application startup complete"))
     )
     container.start()
-
-    wait_for_logs(container, "Application startup complete")
 
     yield container
 

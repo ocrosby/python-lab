@@ -16,3 +16,8 @@ dev = [
     "testcontainers>=4.0.0",
     "invoke>=2.2.0",
 ]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning:testcontainers.core.waiting_utils",
+]
