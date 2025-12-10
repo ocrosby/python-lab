@@ -1,0 +1,30 @@
+[project]
+name = "project1"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.124.0",
+    "uvicorn[standard]>=0.38.0",
+    "psycopg2-binary>=2.9.9",
+    "passlib[bcrypt]>=1.7.4",
+    "python-jose>=3.5.0",
+    "python-multipart>=0.0.20",
+    "pydantic[email]>=2.12.5",
+    "pydantic-settings>=2.12.0",
+    "slowapi>=0.1.9",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "httpx>=0.27.0",
+    "testcontainers>=4.0.0",
+    "invoke>=2.2.0",
+]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning:testcontainers.core.waiting_utils",
+]
