@@ -1,7 +1,5 @@
 """Unit tests for GetItemUseCase."""
 
-from unittest.mock import AsyncMock
-
 import pytest
 from pytest_mock import MockerFixture
 
@@ -9,7 +7,6 @@ from src.fastapi_basic_example.application.dto.item_dto import ItemResponseDTO
 from src.fastapi_basic_example.application.use_cases.get_item_use_case import (
     GetItemUseCase,
 )
-from src.fastapi_basic_example.domain.entities.item import Item
 from src.fastapi_basic_example.domain.value_objects.query_params import QueryParams
 
 

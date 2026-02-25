@@ -1,13 +1,11 @@
 """Unit tests for HealthService."""
 
-from datetime import UTC, datetime
-from unittest.mock import patch
+from datetime import datetime
 
 import pytest
 from pytest_mock import MockerFixture
 
 from src.fastapi_basic_example.application.dto.item_dto import (
-    DetailedHealthCheckDTO,
     HealthCheckDTO,
     WelcomeDTO,
 )

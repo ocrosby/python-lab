@@ -40,7 +40,7 @@ class TestItem:
         assert item_valid.item_id == 1
 
         # Test with negative ID - should raise ValidationError with Pydantic
-        with pytest.raises(Exception):  # ValidationError
+        with pytest.raises(ValueError):
             Item(item_id=-1, name="Negative ID Item")
 
     def test_item_equality(self):

@@ -49,7 +49,12 @@ async def health_check(
     return health_service.get_health_status()
 
 
-@router.get("/health/live", response_model=ProbeResponseDTO, include_in_schema=True, tags=["Probes"])
+@router.get(
+    "/health/live",
+    response_model=ProbeResponseDTO,
+    include_in_schema=True,
+    tags=["Probes"],
+)
 @router.get("/healthz", include_in_schema=False)
 @inject
 async def liveness_probe(
@@ -68,7 +73,12 @@ async def liveness_probe(
     raise HTTPException(status_code=503, detail="Service not alive")
 
 
-@router.get("/health/ready", response_model=ProbeResponseDTO, include_in_schema=True, tags=["Probes"])
+@router.get(
+    "/health/ready",
+    response_model=ProbeResponseDTO,
+    include_in_schema=True,
+    tags=["Probes"],
+)
 @router.get("/readiness", include_in_schema=False)
 @inject
 async def readiness_probe(
@@ -87,7 +97,12 @@ async def readiness_probe(
     raise HTTPException(status_code=503, detail="Service not ready")
 
 
-@router.get("/health/startup", response_model=ProbeResponseDTO, include_in_schema=True, tags=["Probes"])
+@router.get(
+    "/health/startup",
+    response_model=ProbeResponseDTO,
+    include_in_schema=True,
+    tags=["Probes"],
+)
 @inject
 async def startup_probe(
     health_service: HealthService = Depends(Provide[Container.health_service]),

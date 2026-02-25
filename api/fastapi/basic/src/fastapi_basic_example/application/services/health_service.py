@@ -35,9 +35,7 @@ class HealthService:
 
     async def get_detailed_health_status(self) -> DetailedHealthCheckDTO:
         """Get detailed health status of the application."""
-        uptime_seconds = (
-            current_utc_datetime() - self.startup_time
-        ).total_seconds()
+        uptime_seconds = (current_utc_datetime() - self.startup_time).total_seconds()
 
         logger.info(
             "Detailed health status requested",

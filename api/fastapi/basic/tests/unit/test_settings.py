@@ -1,12 +1,8 @@
 """Unit tests for application settings."""
 
-import os
-from unittest.mock import patch
-
 import pytest
 
 from src.fastapi_basic_example.infrastructure.config.settings import Settings
-from src.fastapi_basic_example.domain.constants import AppConstants, ServerConstants
 
 
 @pytest.mark.unit

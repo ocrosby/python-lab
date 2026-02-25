@@ -31,13 +31,13 @@ def lint(ctx, fix=False):
     ctx.run(f"uv run ruff check {fix_flag} .")
 
 
-@task(aliases=["fc"])
+@task(aliases=["k"])
 def format_check(ctx):
     """Check code formatting with ruff."""
     ctx.run("uv run ruff format --check .")
 
 
-@task(aliases=["t"])
+@task(pre=[lint], aliases=["t"])
 def test(ctx, verbose=False, markers=None, coverage=True, fail_under=80):
     """Run tests with pytest."""
     flags = []
@@ -59,25 +59,25 @@ def test(ctx, verbose=False, markers=None, coverage=True, fail_under=80):
     ctx.run(f"uv run pytest {flags_str}")
 
 
-@task(aliases=["tu"])
+@task(aliases=["u"])
 def test_unit(ctx):
     """Run only unit tests."""
     test(ctx, markers="unit")
 
 
-@task(aliases=["ti"])
+@task(aliases=["n"])
 def test_integration(ctx):
     """Run only integration tests."""
     test(ctx, markers="integration")
 
 
-@task(aliases=["te"])
+@task(aliases=["e"])
 def test_e2e(ctx):
     """Run only end-to-end tests."""
     test(ctx, markers="e2e")
 
 
-@task(aliases=["cr"])
+@task(aliases=["v"])
 def coverage_report(ctx):
     """Generate coverage report."""
     ctx.run("uv run coverage report")
@@ -139,20 +139,20 @@ def dev(ctx, log_level="info", json_logging=False):
     )
 
 
-@task(aliases=["b"])
+@task(pre=[check], aliases=["b"])
 def build(ctx):
     """Build the project."""
     ctx.run("uv build")
 
 
-@task(aliases=["bd"])
+@task(pre=[check], aliases=["o"])
 def build_docker(ctx, tag="fastapi-basic-example:latest", no_cache=False):
     """Build Docker image."""
     cache_flag = "--no-cache" if no_cache else ""
     ctx.run(f"docker build {cache_flag} -t {tag} .")
 
 
-@task(aliases=["ba"])
+@task(aliases=["a"])
 def build_all(ctx):
     """Build both Python package and Docker image."""
     print("🏗️  Building Python package...")
