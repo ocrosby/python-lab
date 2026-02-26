@@ -16,9 +16,3 @@ def app():
 def client(app):
     """Create a test client."""
     return TestClient(app)
-
-
-@pytest.fixture
-def container(app):
-    """Get the DI container from the app."""
-    return app.state.container

@@ -1,6 +1,7 @@
 """API routers for the FastAPI application."""
 
-from dependency_injector.wiring import Provide, inject
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException
 
 from ...application.dto.item_dto import (
@@ -14,7 +15,7 @@ from ...application.use_cases.get_item_use_case import GetItemUseCase
 from ...domain.constants import HealthConstants
 from ...domain.value_objects.query_params import QueryParams
 from ...infrastructure.utils.datetime_utils import current_utc_timestamp
-from ..di.container import Container
+from ..di.dependencies import get_health_service, get_item_use_case
 
 router = APIRouter()
 
@@ -28,20 +29,19 @@ def create_probe_response(status: str) -> ProbeResponseDTO:
 
 
 @router.get("/", response_model=WelcomeDTO)
-@inject
 async def read_root(
-    health_service: HealthService = Depends(Provide[Container.health_service]),
+    health_service: Annotated[HealthService, Depends(get_health_service)],
 ) -> WelcomeDTO:
     """Root endpoint."""
     return health_service.get_welcome_message()
 
 
 @router.get("/items/{item_id}", response_model=ItemResponseDTO)
-@inject
 async def read_item(
     item_id: int,
     q: str | None = None,
-    use_case: GetItemUseCase = Depends(Provide[Container.get_item_use_case]),
+    *,
+    use_case: Annotated[GetItemUseCase, Depends(get_item_use_case)],
 ) -> ItemResponseDTO:
     """Get item by ID."""
     query_params = QueryParams(q=q) if q is not None else None
@@ -49,9 +49,8 @@ async def read_item(
 
 
 @router.get("/health", response_model=HealthCheckDTO, tags=["Health"])
-@inject
 async def health_check(
-    health_service: HealthService = Depends(Provide[Container.health_service]),
+    health_service: Annotated[HealthService, Depends(get_health_service)],
 ) -> HealthCheckDTO:
     """Health check endpoint."""
     return health_service.get_health_status()
@@ -64,9 +63,8 @@ async def health_check(
     tags=["Probes"],
 )
 @router.get("/healthz", include_in_schema=False)
-@inject
 async def liveness_probe(
-    health_service: HealthService = Depends(Provide[Container.health_service]),
+    health_service: Annotated[HealthService, Depends(get_health_service)],
 ) -> ProbeResponseDTO:
     """Kubernetes liveness probe endpoint.
 
@@ -85,9 +83,8 @@ async def liveness_probe(
     tags=["Probes"],
 )
 @router.get("/readiness", include_in_schema=False)
-@inject
 async def readiness_probe(
-    health_service: HealthService = Depends(Provide[Container.health_service]),
+    health_service: Annotated[HealthService, Depends(get_health_service)],
 ) -> ProbeResponseDTO:
     """Kubernetes readiness probe endpoint.
 
@@ -105,9 +102,8 @@ async def readiness_probe(
     include_in_schema=True,
     tags=["Probes"],
 )
-@inject
 async def startup_probe(
-    health_service: HealthService = Depends(Provide[Container.health_service]),
+    health_service: Annotated[HealthService, Depends(get_health_service)],
 ) -> ProbeResponseDTO:
     """Kubernetes startup probe endpoint.
 
