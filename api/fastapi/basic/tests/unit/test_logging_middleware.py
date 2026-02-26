@@ -101,3 +101,37 @@ def test_request_id_context(mock_set_request_id, client_with_middleware):
     request_id = mock_set_request_id.call_args[0][0]
     assert isinstance(request_id, str)
     assert len(request_id.split("-")) == 5  # UUID format
+
+
+@pytest.mark.asyncio
+async def test_log_context_with_request_id():
+    """Test log_context sets request ID from request state."""
+    from unittest.mock import MagicMock
+
+    from src.fastapi_basic_example.infrastructure.logging.middleware import log_context
+
+    mock_request = MagicMock()
+    mock_request.state.request_id = "test-request-123"
+
+    with patch(
+        "src.fastapi_basic_example.infrastructure.logging.middleware.set_request_id"
+    ) as mock_set:
+        async with log_context(mock_request):
+            mock_set.assert_called_once_with("test-request-123")
+
+
+@pytest.mark.asyncio
+async def test_log_context_without_request_id():
+    """Test log_context when no request ID is present."""
+    from unittest.mock import MagicMock
+
+    from src.fastapi_basic_example.infrastructure.logging.middleware import log_context
+
+    mock_request = MagicMock()
+    mock_request.state = MagicMock(spec=[])
+
+    with patch(
+        "src.fastapi_basic_example.infrastructure.logging.middleware.set_request_id"
+    ) as mock_set:
+        async with log_context(mock_request):
+            mock_set.assert_not_called()

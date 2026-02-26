@@ -56,3 +56,50 @@ class TestRepo:
         assert result1 == item1
         assert result2 == item2
         assert result3 is None
+
+    @pytest.mark.asyncio
+    async def test_save_item(self):
+        """Test saving an item."""
+        repository = Repo()
+        item = Item(item_id=1, name="Test Item", description="Test Description")
+
+        saved = await repository.save(item)
+
+        assert saved == item
+        assert saved.item_id == 1
+        assert await repository.get_by_id(1) == saved
+
+    @pytest.mark.asyncio
+    async def test_save_overwrites_existing(self):
+        """Test saving overwrites existing item."""
+        repository = Repo()
+        item1 = Item(item_id=1, name="Original", description="Original Desc")
+        item2 = Item(item_id=1, name="Updated", description="Updated Desc")
+
+        await repository.save(item1)
+        await repository.save(item2)
+
+        result = await repository.get_by_id(1)
+        assert result == item2
+        assert result.name == "Updated"
+
+    @pytest.mark.asyncio
+    async def test_delete_existing_item(self):
+        """Test deleting an existing item."""
+        repository = Repo()
+        item = Item(item_id=1, name="Test Item", description="Test Description")
+        await repository.save(item)
+
+        result = await repository.delete(1)
+
+        assert result is True
+        assert await repository.get_by_id(1) is None
+
+    @pytest.mark.asyncio
+    async def test_delete_non_existing_item(self):
+        """Test deleting a non-existing item."""
+        repository = Repo()
+
+        result = await repository.delete(999)
+
+        assert result is False
