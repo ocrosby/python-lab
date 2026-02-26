@@ -21,4 +21,4 @@ def client(app):
 @pytest.fixture
 def container(app):
     """Get the DI container from the app."""
-    return app.container
+    return app.state.container

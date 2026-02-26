@@ -1,7 +1,5 @@
 """Request logging middleware."""
 
-import time
-import uuid
 from collections.abc import Callable
 from contextlib import asynccontextmanager
 
@@ -9,6 +7,8 @@ import structlog
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from ..utils.id_generator import IdGenerator, UuidGenerator
+from ..utils.time_provider import SystemTimeProvider, TimeProvider
 from .context import set_request_id
 
 logger = structlog.get_logger(__name__)
@@ -17,17 +17,24 @@ logger = structlog.get_logger(__name__)
 class RequestLoggingMiddleware(BaseHTTPMiddleware):
     """Middleware for logging HTTP requests and responses."""
 
+    def __init__(
+        self,
+        app,
+        id_generator: IdGenerator | None = None,
+        time_provider: TimeProvider | None = None,
+    ):
+        super().__init__(app)
+        self.id_generator = id_generator or UuidGenerator()
+        self.time_provider = time_provider or SystemTimeProvider()
+
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
         """Process the request and log details."""
-        # Generate request ID
-        request_id = str(uuid.uuid4())
+        request_id = self.id_generator.generate()
         set_request_id(request_id)
 
-        # Add request ID to request state for access in handlers
         request.state.request_id = request_id
 
-        # Start timing
-        start_time = time.time()
+        start_time = self.time_provider.time()
 
         # Extract request details
         method = request.method
@@ -50,11 +57,9 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
         )
 
         try:
-            # Process the request
             response = await call_next(request)
         except Exception as exc:
-            # Log error
-            processing_time = time.time() - start_time
+            processing_time = self.time_provider.time() - start_time
             logger.error(
                 "Request failed",
                 request_id=request_id,
@@ -67,8 +72,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             )
             raise
 
-        # Calculate processing time
-        processing_time = time.time() - start_time
+        processing_time = self.time_provider.time() - start_time
 
         # Log response
         logger.info(
