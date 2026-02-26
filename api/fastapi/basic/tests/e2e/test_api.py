@@ -1,34 +1,34 @@
 """End-to-end API tests."""
 
-from fastapi.testclient import TestClient
-
-from src.fastapi_basic_example.main import app
-
-client = TestClient(app)
+import pytest
 
 
-def test_read_root():
+@pytest.mark.e2e
+def test_read_root(client):
     """Test the root endpoint."""
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {"Hello": "World"}
 
 
-def test_read_item():
+@pytest.mark.e2e
+def test_read_item(client):
     """Test the items endpoint."""
     response = client.get("/items/5?q=somequery")
     assert response.status_code == 200
     assert response.json() == {"item_id": 5, "q": "somequery"}
 
 
-def test_read_item_without_query():
+@pytest.mark.e2e
+def test_read_item_without_query(client):
     """Test the items endpoint without query parameter."""
     response = client.get("/items/10")
     assert response.status_code == 200
     assert response.json() == {"item_id": 10, "q": None}
 
 
-def test_health_check():
+@pytest.mark.e2e
+def test_health_check(client):
     """Test the health check endpoint."""
     response = client.get("/health")
     assert response.status_code == 200

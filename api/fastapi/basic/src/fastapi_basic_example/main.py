@@ -3,21 +3,16 @@
 from fastapi import FastAPI
 
 from .domain.constants import AppConstants
-from .infrastructure.di.container import Container
+from .infrastructure.di.container import container
 from .infrastructure.logging.config import configure_logging
 from .infrastructure.logging.middleware import RequestLoggingMiddleware
+from .infrastructure.web.routers import router
 
 
-def create_app(container: Container | None = None) -> FastAPI:
+def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
-    if container is None:
-        container = Container()
-        container.wire(modules=["fastapi_basic_example.infrastructure.web.routers"])
-
     settings = container.settings()
     configure_logging(log_level=settings.log_level, use_json=settings.json_logging)
-
-    from .infrastructure.web.routers import router
 
     app = FastAPI(
         title=AppConstants.NAME,

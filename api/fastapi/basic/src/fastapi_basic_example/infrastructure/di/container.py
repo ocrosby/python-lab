@@ -13,6 +13,10 @@ from ..utils.time_provider import SystemTimeProvider
 class Container(containers.DeclarativeContainer):
     """Dependency injection container."""
 
+    wiring_config = containers.WiringConfiguration(
+        modules=["fastapi_basic_example.infrastructure.web.routers"]
+    )
+
     settings = providers.Singleton(Settings)
 
     id_generator = providers.Singleton(UuidGenerator)
@@ -21,9 +25,12 @@ class Container(containers.DeclarativeContainer):
 
     item_repository = providers.Singleton(InMemoryItemRepository)
 
-    health_service = providers.Singleton(HealthService)
+    health_service = providers.Factory(HealthService)
 
     get_item_use_case = providers.Factory(
         GetItemUseCase,
         item_repository=item_repository,
     )
+
+
+container = Container()
