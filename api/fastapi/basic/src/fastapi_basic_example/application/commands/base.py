@@ -1,7 +1,7 @@
 """Base command pattern interfaces."""
 
 from abc import ABC, abstractmethod
-from typing import Generic, TypeVar
+from typing import TypeVar
 
 from ...domain.result import Result
 
@@ -10,7 +10,7 @@ TResponse = TypeVar("TResponse")
 TError = TypeVar("TError")
 
 
-class Command(ABC, Generic[TRequest, TResponse, TError]):
+class Command[TRequest, TResponse, TError](ABC):
     """Base command interface for CQRS pattern."""
 
     @abstractmethod
@@ -19,7 +19,7 @@ class Command(ABC, Generic[TRequest, TResponse, TError]):
         pass
 
 
-class Query(ABC, Generic[TRequest, TResponse, TError]):
+class Query[TRequest, TResponse, TError](ABC):
     """Base query interface for CQRS pattern."""
 
     @abstractmethod
