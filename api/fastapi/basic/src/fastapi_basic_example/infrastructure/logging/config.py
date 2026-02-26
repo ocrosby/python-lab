@@ -6,7 +6,7 @@ import sys
 from typing import Any
 
 import structlog
-from pythonjsonlogger import jsonlogger
+from pythonjsonlogger.json import JsonFormatter
 
 
 def configure_logging(log_level: str = "INFO", use_json: bool = False) -> None:
@@ -56,7 +56,7 @@ def get_uvicorn_log_config(
     """Get uvicorn logging configuration."""
     if use_json:
         formatter = {
-            "()": jsonlogger.JsonFormatter,
+            "()": JsonFormatter,
             "format": "%(asctime)s %(name)s %(levelname)s %(message)s",
         }
     else:
