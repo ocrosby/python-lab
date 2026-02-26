@@ -19,6 +19,14 @@ from ..di.container import Container
 router = APIRouter()
 
 
+def create_probe_response(status: str) -> ProbeResponseDTO:
+    """Create a probe response DTO."""
+    return ProbeResponseDTO(
+        status=status,
+        timestamp=current_utc_timestamp(),
+    )
+
+
 @router.get("/", response_model=WelcomeDTO)
 @inject
 async def read_root(
@@ -66,10 +74,7 @@ async def liveness_probe(
     If it fails, Kubernetes will restart the container.
     """
     if await health_service.is_alive():
-        return ProbeResponseDTO(
-            status=HealthConstants.ALIVE,
-            timestamp=current_utc_timestamp(),
-        )
+        return create_probe_response(HealthConstants.ALIVE)
     raise HTTPException(status_code=503, detail="Service not alive")
 
 
@@ -90,10 +95,7 @@ async def readiness_probe(
     If it fails, Kubernetes will stop sending traffic to this instance.
     """
     if await health_service.is_ready():
-        return ProbeResponseDTO(
-            status=HealthConstants.READY,
-            timestamp=current_utc_timestamp(),
-        )
+        return create_probe_response(HealthConstants.READY)
     raise HTTPException(status_code=503, detail="Service not ready")
 
 
@@ -114,8 +116,5 @@ async def startup_probe(
     Used for applications with slow startup times.
     """
     if await health_service.is_alive():
-        return ProbeResponseDTO(
-            status=HealthConstants.STARTED,
-            timestamp=current_utc_timestamp(),
-        )
+        return create_probe_response(HealthConstants.STARTED)
     raise HTTPException(status_code=503, detail="Service not started")

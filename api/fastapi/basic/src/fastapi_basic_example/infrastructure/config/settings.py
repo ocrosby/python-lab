@@ -1,5 +1,6 @@
 """Application settings."""
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from ...domain.constants import AppConstants, ServerConstants
@@ -22,6 +23,22 @@ class Settings(BaseSettings):
     reload: bool = True
     log_level: str = "INFO"
     json_logging: bool = False
+
+    @field_validator("log_level")
+    @classmethod
+    def validate_log_level(cls, v: str) -> str:
+        valid_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+        upper_v = v.upper()
+        if upper_v not in valid_levels:
+            raise ValueError(f"log_level must be one of {valid_levels}")
+        return upper_v
+
+    @field_validator("port")
+    @classmethod
+    def validate_port(cls, v: int) -> int:
+        if not 1 <= v <= 65535:
+            raise ValueError("port must be between 1 and 65535")
+        return v
 
 
 settings = Settings()
