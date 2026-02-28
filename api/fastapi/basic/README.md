@@ -1,17 +1,24 @@
 # FastAPI Basic Example
 
-A simple FastAPI application demonstrating modern Python tooling with uv, ruff, and invoke, implemented using Hexagonal Architecture (Ports and Adapters).
+A production-ready FastAPI application demonstrating modern Python tooling with uv, ruff, and invoke, implemented using Hexagonal Architecture (Ports and Adapters).
+
+## Quick Links
+
+- **[Architecture Guide](ARCHITECTURE.md)** - Detailed hexagonal architecture explanation with diagrams
+- **[Design Patterns](DESIGN_PATTERNS.md)** - Design patterns used in this project
+- **[FastAPI Quick Reference](../docs/README.md)** - FastAPI features quick reference
 
 ## Features
 
 - **Hexagonal Architecture** - Clean separation of business logic, application services, and infrastructure
-- **Dependency Injection** - Using `dependency-injector` for IoC container management
+- **Dependency Injection** - Native FastAPI DI for IoC management
 - **Structured Logging** - JSON logging with correlation IDs using `structlog`
 - **Health Checks** - Kubernetes-ready liveness, readiness, and startup probes
 - **Modern Tooling** - Fast package management with `uv`, linting/formatting with `ruff`
 - **Task Automation** - Invoke tasks with single-character aliases for developer ergonomics
-- **Comprehensive Testing** - Unit, integration, and e2e tests with pytest
-- **Type Safety** - Full type hints with Pydantic models
+- **Comprehensive Testing** - 98% test coverage with unit, integration, and e2e tests
+- **Type Safety** - Full type hints with Pydantic v2 models
+- **Design Patterns** - Result pattern, Value Objects, Repository pattern, Use Cases
 
 ## Technology Stack
 
@@ -28,29 +35,59 @@ A simple FastAPI application demonstrating modern Python tooling with uv, ruff, 
 
 This project implements **Hexagonal Architecture** (also known as Ports and Adapters), which provides clear separation of concerns and makes the application more testable and maintainable.
 
+For a comprehensive guide with diagrams and request flow examples, see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
+
 ### Architecture Layers
+
+```
+┌─────────────────────────────────────────┐
+│     Infrastructure Layer (Adapters)     │
+│  ┌───────────────────────────────────┐ │
+│  │     Application Layer (Use Cases) │ │
+│  │  ┌─────────────────────────────┐ │ │
+│  │  │   Domain Layer (Core Logic) │ │ │
+│  │  └─────────────────────────────┘ │ │
+│  └───────────────────────────────────┘ │
+└─────────────────────────────────────────┘
+```
 
 - **Domain Layer** (`src/fastapi_basic_example/domain/`): Contains business logic, entities, and domain interfaces
   - `entities/`: Business objects (Item)
-  - `repositories/`: Abstract repository interfaces
-  - `value_objects/`: Domain value objects (QueryParams)
+  - `repositories/`: Abstract repository interfaces (Ports)
+  - `value_objects/`: Type-safe domain concepts (ItemId, QueryParams, HealthStatus)
+  - `result.py`: Result pattern for explicit error handling
+  - `errors.py`: Domain-specific errors
 
 - **Application Layer** (`src/fastapi_basic_example/application/`): Orchestrates domain objects and implements use cases
-  - `dto/`: Data Transfer Objects for external communication
+  - `use_cases/`: Business workflows (GetItemUseCase)
   - `services/`: Application services (HealthService)
-  - `use_cases/`: Business use cases (GetItemUseCase)
+  - `dto/`: Data Transfer Objects for external communication
+  - `commands/`: Command/Query pattern interfaces
 
 - **Infrastructure Layer** (`src/fastapi_basic_example/infrastructure/`): External concerns and adapters
+  - `web/`: HTTP adapters and FastAPI routers (REST Adapter)
+  - `persistence/`: Repository implementations (Database Adapter)
+  - `di/`: Dependency injection configuration
   - `config/`: Configuration and settings
-  - `persistence/`: Repository implementations (InMemoryItemRepository)
-  - `web/`: HTTP adapters and routers
+  - `logging/`: Structured logging infrastructure
 
 ### Benefits of This Architecture
 
 1. **Dependency Inversion**: Core business logic doesn't depend on external frameworks
-2. **Testability**: Easy to unit test business logic in isolation
+2. **Testability**: Easy to unit test business logic in isolation (98% coverage achieved)
 3. **Flexibility**: Can swap implementations (e.g., database, web framework) without affecting core logic
 4. **Clear Boundaries**: Well-defined separation between business rules and technical concerns
+5. **Framework Independence**: Domain and application layers are FastAPI-agnostic
+
+### Key Design Patterns
+
+- **Repository Pattern**: Abstract data access with interfaces (Ports) and implementations (Adapters)
+- **Value Objects**: Type-safe domain concepts (no primitive obsession)
+- **Result Pattern**: Explicit error handling without exceptions
+- **Use Case Pattern**: Single-responsibility business workflows
+- **Dependency Injection**: Loose coupling via FastAPI's native DI
+
+See **[DESIGN_PATTERNS.md](DESIGN_PATTERNS.md)** for detailed pattern explanations and usage examples.
 
 ## Project Structure
 
