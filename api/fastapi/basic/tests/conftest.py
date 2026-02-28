@@ -15,4 +15,4 @@ def app():
 @pytest.fixture
 def client(app):
     """Create a test client."""
-    return TestClient(app)
+    return TestClient(app, base_url="http://localhost")
