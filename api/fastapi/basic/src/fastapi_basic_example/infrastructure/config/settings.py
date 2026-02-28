@@ -23,6 +23,13 @@ class Settings(BaseSettings):
     reload: bool = True
     log_level: str = "INFO"
     json_logging: bool = False
+    cors_origins: list[str] = ["http://localhost:3000", "http://localhost:8080"]
+    cors_allow_credentials: bool = True
+    cors_allow_methods: list[str] = ["*"]
+    cors_allow_headers: list[str] = ["*"]
+    allowed_hosts: list[str] = ["localhost", "127.0.0.1", "*.example.com"]
+    gzip_minimum_size: int = 1000
+    gzip_compression_level: int = 5
 
     @field_validator("log_level")
     @classmethod
