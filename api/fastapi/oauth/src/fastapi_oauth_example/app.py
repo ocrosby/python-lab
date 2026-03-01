@@ -9,6 +9,9 @@ from fastapi_oauth_example.infrastructure.config.settings import settings
 from fastapi_oauth_example.infrastructure.di.dependencies import database
 from fastapi_oauth_example.infrastructure.security.rate_limiter import RateLimiter
 from fastapi_oauth_example.infrastructure.web.auth_router import router as auth_router
+from fastapi_oauth_example.infrastructure.web.health_router import (
+    router as health_router,
+)
 from fastapi_oauth_example.infrastructure.web.middleware import (
     LoggingMiddleware,
     RateLimitMiddleware,
@@ -63,9 +66,5 @@ app.add_middleware(TimingMiddleware)
 app.add_middleware(LoggingMiddleware)
 app.add_middleware(RequestIDMiddleware)
 
+app.include_router(health_router)
 app.include_router(auth_router)
-
-
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
