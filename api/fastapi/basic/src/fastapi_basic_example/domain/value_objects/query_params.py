@@ -20,4 +20,3 @@ class QueryParams(BaseModel):
         if v is not None and len(v.strip()) == 0:
             return None
         return v
-

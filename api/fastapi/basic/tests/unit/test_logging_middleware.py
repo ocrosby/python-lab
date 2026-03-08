@@ -103,4 +103,3 @@ def test_request_id_context(mock_set_request_id, client_with_middleware):
     request_id = mock_set_request_id.call_args[0][0]
     assert isinstance(request_id, str)
     assert len(request_id.split("-")) == 5
-

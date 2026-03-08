@@ -40,4 +40,3 @@ class TestHealthService:
         result = await health_service.is_ready()
 
         assert result is True
-

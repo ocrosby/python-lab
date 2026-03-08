@@ -119,4 +119,3 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
         )
 
         return response
-
