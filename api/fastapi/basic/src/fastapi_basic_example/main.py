@@ -14,7 +14,7 @@ from .infrastructure.logging.middleware import (
     RequestLoggingMiddleware,
     TimingMiddleware,
 )
-from .infrastructure.web.routers import router
+from .adapters.inbound.http.routers import router
 
 
 def create_app() -> FastAPI:

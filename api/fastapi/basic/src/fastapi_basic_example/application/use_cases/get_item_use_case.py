@@ -1,6 +1,6 @@
 """Get item use case."""
 
-from ...domain.repositories.item_repository import ItemRepository
+from ...ports.outbound.item_repository import ItemRepository
 from ...domain.value_objects.query_params import QueryParams
 from ..dto.item_dto import ItemResponseDTO
 

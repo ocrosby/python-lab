@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 
-from ..entities.item import Item
+from ...domain.entities.item import Item
 
 
 class ItemRepository(ABC):

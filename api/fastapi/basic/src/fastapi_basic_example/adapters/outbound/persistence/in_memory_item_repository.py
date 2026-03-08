@@ -1,7 +1,7 @@
 """In-memory implementation of item repository."""
 
-from ...domain.entities.item import Item
-from ...domain.repositories.item_repository import ItemRepository
+from ....domain.entities.item import Item
+from ....ports.outbound.item_repository import ItemRepository
 
 
 class InMemoryItemRepository(ItemRepository):

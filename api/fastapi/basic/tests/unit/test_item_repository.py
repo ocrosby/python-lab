@@ -3,7 +3,7 @@
 import pytest
 
 from src.fastapi_basic_example.domain.entities.item import Item
-from src.fastapi_basic_example.infrastructure.persistence import (
+from src.fastapi_basic_example.adapters.outbound.persistence import (
     in_memory_item_repository,
 )
 

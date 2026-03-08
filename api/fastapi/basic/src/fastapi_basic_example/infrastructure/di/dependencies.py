@@ -7,7 +7,7 @@ from fastapi import Depends
 from ...application.services.health_service import HealthService
 from ...application.use_cases.get_item_use_case import GetItemUseCase
 from ..config.settings import Settings
-from ..persistence.in_memory_item_repository import InMemoryItemRepository
+from ...adapters.outbound.persistence.in_memory_item_repository import InMemoryItemRepository
 from ..utils.id_generator import IdGenerator, UuidGenerator
 from ..utils.time_provider import SystemTimeProvider, TimeProvider
 
