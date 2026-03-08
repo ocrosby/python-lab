@@ -1,6 +1,7 @@
 """Request logging middleware."""
 
 from collections.abc import Callable
+from typing import cast
 
 import structlog
 from fastapi import Request, Response
@@ -30,7 +31,7 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
         set_request_id(request_id)
         request.state.request_id = request_id
 
-        response = await call_next(request)
+        response = cast(Response, await call_next(request))
         response.headers["X-Request-ID"] = request_id
 
         return response
@@ -51,7 +52,7 @@ class TimingMiddleware(BaseHTTPMiddleware):
         """Track and log request processing time."""
         start_time = self.time_provider.time()
 
-        response = await call_next(request)
+        response = cast(Response, await call_next(request))
 
         process_time = self.time_provider.time() - start_time
         response.headers["X-Process-Time"] = str(process_time)
@@ -97,7 +98,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
         )
 
         try:
-            response = await call_next(request)
+            response = cast(Response, await call_next(request))
         except Exception as exc:
             logger.error(
                 "Request failed",

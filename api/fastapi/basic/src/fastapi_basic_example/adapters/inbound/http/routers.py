@@ -45,7 +45,7 @@ async def read_item(
     """Get item by ID."""
     query_params = QueryParams(q=q) if q is not None else None
     try:
-        return await use_case.execute(item_id, query_params)
+        return await use_case.execute(item_id, query_params)  # type: ignore[no-any-return]
     except ItemNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e)) from e
 

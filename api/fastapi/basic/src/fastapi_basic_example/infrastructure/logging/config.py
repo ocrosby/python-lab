@@ -2,10 +2,8 @@
 
 import logging
 import sys
-from typing import Any
 
 import structlog
-from pythonjsonlogger.json import JsonFormatter
 
 
 def configure_logging(log_level: str = "INFO", use_json: bool = False) -> None:
@@ -36,48 +34,9 @@ def configure_logging(log_level: str = "INFO", use_json: bool = False) -> None:
 
     # Configure structlog
     structlog.configure(
-        processors=processors,
+        processors=processors,  # type: ignore[arg-type]
         context_class=dict,
         logger_factory=structlog.stdlib.LoggerFactory(),
         wrapper_class=structlog.stdlib.BoundLogger,
         cache_logger_on_first_use=True,
     )
-
-
-def get_uvicorn_log_config(
-    log_level: str = "info", use_json: bool = False
-) -> dict[str, Any]:
-    """Get uvicorn logging configuration."""
-    if use_json:
-        formatter = {
-            "()": JsonFormatter,
-            "format": "%(asctime)s %(name)s %(levelname)s %(message)s",
-        }
-    else:
-        formatter = {
-            "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        }
-
-    return {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "formatters": {
-            "default": formatter,
-        },
-        "handlers": {
-            "default": {
-                "formatter": "default",
-                "class": "logging.StreamHandler",
-                "stream": "ext://sys.stdout",
-            },
-        },
-        "root": {
-            "level": log_level.upper(),
-            "handlers": ["default"],
-        },
-        "loggers": {
-            "uvicorn": {"level": log_level.upper(), "propagate": True},
-            "uvicorn.error": {"level": log_level.upper(), "propagate": True},
-            "uvicorn.access": {"level": log_level.upper(), "propagate": True},
-        },
-    }

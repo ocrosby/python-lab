@@ -15,4 +15,5 @@ def app():
 @pytest.fixture
 def client(app):
     """Create a test client."""
-    return TestClient(app, base_url="http://localhost")
+    with TestClient(app, base_url="http://localhost") as c:
+        yield c

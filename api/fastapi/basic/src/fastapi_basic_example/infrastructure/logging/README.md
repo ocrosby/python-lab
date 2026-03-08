@@ -23,10 +23,6 @@ per-request context propagation, and ASGI middleware for automatic request/respo
 | `use_json=False` | Colourised console (dev) | Local development |
 | `use_json=True` | JSON lines | Production / log aggregation (Datadog, ELK, etc.) |
 
-`get_uvicorn_log_config(log_level, use_json)` returns a dict for uvicorn's
-`--log-config` argument, keeping uvicorn's own access logs in the same format as
-application logs.
-
 ---
 
 ## context.py

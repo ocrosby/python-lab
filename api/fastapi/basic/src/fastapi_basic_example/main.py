@@ -1,5 +1,8 @@
 """FastAPI application entry point."""
 
+from contextlib import asynccontextmanager
+
+import structlog
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
@@ -16,6 +19,16 @@ from .infrastructure.logging.middleware import (
     TimingMiddleware,
 )
 
+logger = structlog.get_logger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan: startup and shutdown logic."""
+    logger.info("Application starting up")
+    yield
+    logger.info("Application shutting down")
+
 
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
@@ -26,6 +39,7 @@ def create_app() -> FastAPI:
         title=AppConstants.NAME,
         description=AppConstants.DESCRIPTION,
         version=AppConstants.VERSION,
+        lifespan=lifespan,
     )
 
     app.add_middleware(

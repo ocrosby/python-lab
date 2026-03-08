@@ -3,7 +3,7 @@
 import functools
 import inspect
 from collections.abc import Callable
-from typing import TypeVar
+from typing import TypeVar, cast
 
 import structlog
 
@@ -67,7 +67,7 @@ def log_execution(logger_name: str) -> Callable:
                 raise
 
         if inspect.iscoroutinefunction(func):
-            return async_wrapper
-        return sync_wrapper
+            return cast(F, async_wrapper)
+        return cast(F, sync_wrapper)
 
     return decorator
