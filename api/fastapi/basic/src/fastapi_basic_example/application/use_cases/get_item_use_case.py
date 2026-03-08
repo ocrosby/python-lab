@@ -20,7 +20,7 @@ class GetItemUseCase:
         """Execute the get item use case."""
         item = await self._item_repository.get_by_id(item_id)
         if item is None:
-            raise ItemNotFoundError(message="", item_id=item_id)
+            raise ItemNotFoundError(item_id=item_id)
 
         q_value = query_params.q if query_params else None
         return ItemResponseDTO(item_id=item.item_id, q=q_value)

@@ -15,17 +15,30 @@ This document describes the design patterns implemented in this application and 
 from domain.result import Success, Failure, Result
 from domain.errors import ItemNotFoundError
 
-async def get_item(item_id: int) -> Result[Item, ItemNotFoundError]:
-    item = await repository.get_by_id(item_id)
-    if item is None:
-        return Failure(ItemNotFoundError(item_id))
-    return Success(item)
+# The Result type is available for explicit error handling in future use cases.
+# Current use cases raise domain exceptions directly:
+result: Result[Item, ItemNotFoundError] = Success(item)
+assert result.is_success()
+assert result.value == item
+
+failure: Result[Item, ItemNotFoundError] = Failure(ItemNotFoundError(item_id=42))
+assert failure.is_failure()
+assert isinstance(failure.error, ItemNotFoundError)
+```
+
+**Actual pattern in use (exception-based):**
+```python
+# In use case:
+item = await self._item_repository.get_by_id(item_id)
+if item is None:
+    raise ItemNotFoundError(item_id=item_id)
+return ItemResponseDTO(item_id=item.item_id, q=q_value)
 
 # In router:
-result = await get_item(123)
-if result.is_failure():
-    raise HTTPException(status_code=404, detail=str(result.error))
-return result.value
+try:
+    return await use_case.execute(item_id, query_params)
+except ItemNotFoundError as e:
+    raise HTTPException(status_code=404, detail=str(e))
 ```
 
 **Benefits:**
@@ -333,22 +346,24 @@ class Item:
 ### Unit Tests
 ```python
 async def test_get_item_success():
-    repository = MockRepository()
-    use_case = GetItemQuery(repository)
-    
+    mock_repo = MagicMock()
+    mock_repo.get_by_id = AsyncMock(return_value=Item(item_id=123))
+    use_case = GetItemUseCase(mock_repo)
+
     result = await use_case.execute(123)
-    
-    assert result.is_success()
-    assert result.value.item_id == 123
+
+    assert isinstance(result, ItemResponseDTO)
+    assert result.item_id == 123
 
 async def test_get_item_not_found():
-    repository = MockRepository()
-    use_case = GetItemQuery(repository)
-    
-    result = await use_case.execute(999)
-    
-    assert result.is_failure()
-    assert isinstance(result.error, ItemNotFoundError)
+    mock_repo = MagicMock()
+    mock_repo.get_by_id = AsyncMock(return_value=None)
+    use_case = GetItemUseCase(mock_repo)
+
+    with pytest.raises(ItemNotFoundError) as exc_info:
+        await use_case.execute(999)
+
+    assert exc_info.value.item_id == 999
 ```
 
 ### Integration Tests

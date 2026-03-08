@@ -44,11 +44,6 @@ def configure_logging(log_level: str = "INFO", use_json: bool = False) -> None:
     )
 
 
-def get_logger(name: str) -> structlog.stdlib.BoundLogger:
-    """Get a structured logger instance."""
-    return structlog.get_logger(name)
-
-
 def get_uvicorn_log_config(
     log_level: str = "info", use_json: bool = False
 ) -> dict[str, Any]:

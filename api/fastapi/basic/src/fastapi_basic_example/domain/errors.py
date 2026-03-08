@@ -16,7 +16,7 @@ class DomainError(Exception):
 class ItemNotFoundError(DomainError):
     """Error when item is not found."""
 
-    def __init__(self, message: str = "", item_id: int = 0):
+    def __init__(self, item_id: int):
         self.item_id = item_id
         super().__init__(f"Item {item_id} not found")
 
@@ -24,6 +24,6 @@ class ItemNotFoundError(DomainError):
 class ValidationError(DomainError):
     """Error for validation failures."""
 
-    def __init__(self, message: str = "", field: str = ""):
+    def __init__(self, field: str):
         self.field = field
         super().__init__(f"Validation failed for field: {field}")
