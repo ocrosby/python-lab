@@ -17,15 +17,6 @@ class HealthCheckDTO(BaseModel):
     timestamp: str
 
 
-class DetailedHealthCheckDTO(BaseModel):
-    """Detailed health check response DTO."""
-
-    status: str
-    timestamp: str
-    uptime_seconds: float
-    version: str
-
-
 class WelcomeDTO(BaseModel):
     """Welcome message DTO."""
 

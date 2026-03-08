@@ -34,12 +34,7 @@ src/fastapi_basic_example/
 │   ├── entities/              # Business entities
 │   │   └── item.py            # Item entity with business rules
 │   ├── value_objects/         # Domain value objects
-│   │   ├── health_status.py   # Health status value object
-│   │   ├── item_id.py         # Type-safe item ID
 │   │   └── query_params.py    # Query parameters value object
-│   ├── events/                # Domain events (future)
-│   ├── specifications/        # Specification pattern (future)
-│   ├── utils/                 # Domain utilities
 │   ├── constants.py           # Domain constants
 │   ├── errors.py              # Domain-specific errors
 │   └── result.py              # Result pattern for error handling
@@ -49,14 +44,10 @@ src/fastapi_basic_example/
 │   │   └── get_item_use_case.py # Get item use case
 │   ├── services/              # Application services
 │   │   └── health_service.py  # Health check service
-│   ├── dto/                   # Data Transfer Objects
-│   │   └── item_dto.py        # Item DTOs for API responses
-│   ├── commands/              # Command/Query pattern
-│   │   └── base.py            # Base command interfaces
-│   └── builders/              # Builder pattern (future)
+│   └── dto/                   # Data Transfer Objects
+│       └── item_dto.py        # Item DTOs for API responses
 │
 ├── ports/                     # Contracts / Interfaces
-│   ├── inbound/               # Driving ports (future)
 │   └── outbound/              # Driven ports (what the app needs from outside)
 │       └── item_repository.py # Abstract repository interface
 │

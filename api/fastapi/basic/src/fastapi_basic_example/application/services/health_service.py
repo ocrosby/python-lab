@@ -2,13 +2,10 @@
 
 import structlog
 
-from ...domain.constants import AppConstants, HealthConstants
+from ...domain.constants import HealthConstants
 from ...infrastructure.logging.context import get_logger_context
-from ...infrastructure.utils.datetime_utils import (
-    current_utc_datetime,
-    current_utc_timestamp,
-)
-from ..dto.item_dto import DetailedHealthCheckDTO, HealthCheckDTO, WelcomeDTO
+from ...infrastructure.utils.datetime_utils import current_utc_timestamp
+from ..dto.item_dto import HealthCheckDTO, WelcomeDTO
 
 logger = structlog.get_logger(__name__)
 
@@ -18,7 +15,6 @@ class HealthService:
 
     def __init__(self):
         """Initialize the health service."""
-        self.startup_time = current_utc_datetime()
         logger.info("Health service initialized", **get_logger_context())
 
     def get_health_status(self) -> HealthCheckDTO:
@@ -32,23 +28,6 @@ class HealthService:
         """Get welcome message."""
         logger.debug("Welcome message requested", **get_logger_context())
         return WelcomeDTO()
-
-    async def get_detailed_health_status(self) -> DetailedHealthCheckDTO:
-        """Get detailed health status of the application."""
-        uptime_seconds = (current_utc_datetime() - self.startup_time).total_seconds()
-
-        logger.info(
-            "Detailed health status requested",
-            uptime_seconds=uptime_seconds,
-            **get_logger_context(),
-        )
-
-        return DetailedHealthCheckDTO(
-            status=HealthConstants.HEALTHY,
-            timestamp=current_utc_timestamp(),
-            uptime_seconds=uptime_seconds,
-            version=AppConstants.VERSION,
-        )
 
     async def is_ready(self) -> bool:
         """Check if the application is ready to serve traffic."""

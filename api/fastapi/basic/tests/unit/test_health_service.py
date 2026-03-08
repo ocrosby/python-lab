@@ -1,9 +1,6 @@
 """Unit tests for HealthService."""
 
-from datetime import datetime
-
 import pytest
-from pytest_mock import MockerFixture
 
 from src.fastapi_basic_example.application.dto.item_dto import (
     HealthCheckDTO,
@@ -20,8 +17,7 @@ class TestHealthService:
         """Test health service initialization."""
         health_service = HealthService()
 
-        assert health_service.startup_time is not None
-        assert isinstance(health_service.startup_time, datetime)
+        assert health_service is not None
 
     def test_get_health_status(self):
         """Test get_health_status returns correct status."""
@@ -56,25 +52,3 @@ class TestHealthService:
 
         assert result is True
 
-    @pytest.mark.asyncio
-    async def test_get_detailed_health_status(self, mocker: MockerFixture):
-        """Test get_detailed_health_status."""
-        health_service = HealthService()
-        result = await health_service.get_detailed_health_status()
-
-        assert result.status == "healthy"
-        assert result.timestamp is not None
-        assert result.version == "1.0.0"
-        assert result.uptime_seconds >= 0
-
-    @pytest.mark.asyncio
-    async def test_get_detailed_health_status_uptime_calculation(self):
-        """Test uptime calculation in detailed health status."""
-        import time
-
-        health_service = HealthService()
-        time.sleep(0.01)
-        result = await health_service.get_detailed_health_status()
-
-        assert result.uptime_seconds > 0
-        assert result.uptime_seconds >= 0.01
