@@ -52,6 +52,11 @@ class TestItem:
         assert item1 == item2
         assert item1 != item3
 
+    def test_item_whitespace_name_raises(self):
+        """Test that a whitespace-only name raises ValueError."""
+        with pytest.raises(ValueError):
+            Item(item_id=1, name="   ")
+
     def test_item_string_representation(self):
         """Test item string representation."""
         item = Item(item_id=1, name="Test Item", description="Test Description")
