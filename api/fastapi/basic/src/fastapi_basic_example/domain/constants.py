@@ -24,5 +24,5 @@ class HealthConstants:
 class ServerConstants:
     """Server configuration constants."""
 
-    DEFAULT_HOST = "0.0.0.0"
+    DEFAULT_HOST = "0.0.0.0"  # nosec B104 — intentional for container deployments
     DEFAULT_PORT = 8000

@@ -1,25 +1,6 @@
 """End-to-end API tests."""
 
 import pytest
-from fastapi.testclient import TestClient
-
-from src.fastapi_basic_example.adapters.outbound.persistence import (
-    in_memory_item_repository as repo_module,
-)
-from src.fastapi_basic_example.domain.entities.item import Item
-from src.fastapi_basic_example.infrastructure.di.dependencies import get_item_repository
-from src.fastapi_basic_example.main import create_app
-
-
-@pytest.fixture
-def seeded_client():
-    """Create a test client with pre-seeded items."""
-    repo = repo_module.InMemoryItemRepository()
-    repo._items[5] = Item(item_id=5)
-    repo._items[10] = Item(item_id=10)
-    app = create_app()
-    app.dependency_overrides[get_item_repository] = lambda: repo
-    return TestClient(app, base_url="http://localhost")
 
 
 @pytest.mark.e2e

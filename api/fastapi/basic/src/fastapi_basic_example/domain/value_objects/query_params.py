@@ -15,7 +15,7 @@ class QueryParams(BaseModel):
 
     @field_validator("q")
     @classmethod
-    def validate_query(cls, v):
+    def validate_query(cls, v: str | None) -> str | None:
         """Validate query parameter."""
         if v is not None and len(v.strip()) == 0:
             return None

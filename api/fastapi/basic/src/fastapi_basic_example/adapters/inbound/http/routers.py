@@ -29,13 +29,13 @@ def create_probe_response(status: str) -> ProbeResponseDTO:
     )
 
 
-@router.get("/", response_model=WelcomeDTO)
+@router.get("/", response_model=WelcomeDTO, status_code=200)
 async def read_root() -> WelcomeDTO:
     """Root endpoint."""
     return WelcomeDTO()
 
 
-@router.get("/items/{item_id}", response_model=ItemResponseDTO)
+@router.get("/items/{item_id}", response_model=ItemResponseDTO, status_code=200)
 async def read_item(
     item_id: int,
     q: str | None = None,
@@ -50,7 +50,7 @@ async def read_item(
         raise HTTPException(status_code=404, detail=str(e)) from e
 
 
-@router.get("/health", response_model=HealthCheckDTO, tags=["Health"])
+@router.get("/health", response_model=HealthCheckDTO, status_code=200, tags=["Health"])
 async def health_check(
     health_service: Annotated[HealthService, Depends(get_health_service)],
 ) -> HealthCheckDTO:
@@ -61,6 +61,7 @@ async def health_check(
 @router.get(
     "/health/live",
     response_model=ProbeResponseDTO,
+    status_code=200,
     include_in_schema=True,
     tags=["Probes"],
 )
@@ -81,6 +82,7 @@ async def liveness_probe(
 @router.get(
     "/health/ready",
     response_model=ProbeResponseDTO,
+    status_code=200,
     include_in_schema=True,
     tags=["Probes"],
 )
@@ -101,6 +103,7 @@ async def readiness_probe(
 @router.get(
     "/health/startup",
     response_model=ProbeResponseDTO,
+    status_code=200,
     include_in_schema=True,
     tags=["Probes"],
 )

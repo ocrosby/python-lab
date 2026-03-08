@@ -68,6 +68,15 @@ uv run ruff format .
 
 # Start dev server
 uv run uvicorn src.fastapi_basic_example.main:app --reload
+
+# Type check
+uv run mypy src/
+
+# Security scan (SAST)
+uv run bandit -r src/ -ll
+
+# Dependency vulnerability scan
+uv run pip-audit
 ```
 
 ---
