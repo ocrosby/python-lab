@@ -53,9 +53,5 @@ nosetests.xml
 # macOS
 .DS_Store
 
-# Git
-.git
-.gitignore
-
 # Docker
 .docker/
