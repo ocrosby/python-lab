@@ -30,7 +30,7 @@ dependencies = [
 ]
 
 [project.scripts]
-fastapi-oauth = "fastapi_oauth_example.app:app"
+fastapi-oauth = "fastapi_oauth_example.main:app"
 
 [dependency-groups]
 dev = [

@@ -13,7 +13,7 @@ services:
     volumes:
       - ./src:/app/src
     command: [
-      "uvicorn", "fastapi_oauth_example.app:app",
+      "uvicorn", "fastapi_oauth_example.main:app",
       "--host", "0.0.0.0",
       "--port", "8000",
       "--reload",

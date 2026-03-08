@@ -11,7 +11,7 @@ PostgreSQL, hexagonal architecture, security features (rate limiting, account lo
 MFA, token blacklisting), and Kubernetes health probes.
 
 **Package:** `src/fastapi_oauth_example/`
-**Entry point:** `src/fastapi_oauth_example/app.py` → `app` (FastAPI instance)
+**Entry point:** `src/fastapi_oauth_example/main.py` → `app` (FastAPI instance)
 **Package manager:** `uv`
 **Linter/formatter:** `ruff`
 **Test runner:** `pytest` with `pytest-asyncio`
@@ -69,7 +69,7 @@ uv run ruff check .
 uv run ruff format .
 
 # Start dev server
-uv run uvicorn src.fastapi_oauth_example.app:app --reload
+uv run uvicorn src.fastapi_oauth_example.main:app --reload
 
 # Type check
 uv run mypy src/
@@ -87,7 +87,7 @@ uv run pip-audit
 
 | File | Purpose |
 |---|---|
-| `src/fastapi_oauth_example/app.py` | App instance, middleware registration, router inclusion |
+| `src/fastapi_oauth_example/main.py` | App instance, middleware registration, router inclusion |
 | `src/fastapi_oauth_example/infrastructure/web/auth_router.py` | Auth HTTP route handlers |
 | `src/fastapi_oauth_example/infrastructure/web/health_router.py` | Health probe handlers |
 | `src/fastapi_oauth_example/infrastructure/di/dependencies.py` | DI wiring (only place that touches concrete implementations) |

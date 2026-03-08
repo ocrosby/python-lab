@@ -13,7 +13,7 @@ def install(ctx):
 def run(ctx, host="0.0.0.0", port=8000):
     """Run the FastAPI application."""
     ctx.run(
-        f"uvicorn src.fastapi_oauth_example.app:app --host {host} "
+        f"uvicorn src.fastapi_oauth_example.main:app --host {host} "
         f"--port {port} --reload"
     )
 
@@ -127,7 +127,7 @@ def check(ctx):
 def dev(ctx, log_level="info"):
     """Start development server."""
     ctx.run(
-        f"LOG_LEVEL={log_level} uvicorn src.fastapi_oauth_example.app:app --reload "
+        f"LOG_LEVEL={log_level} uvicorn src.fastapi_oauth_example.main:app --reload "
         "--host 0.0.0.0 --port 8000"
     )
 
