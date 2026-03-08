@@ -61,3 +61,23 @@ def test_health_check(client):
     data = response.json()
     assert data["status"] == "healthy"
     assert "timestamp" in data
+
+
+@pytest.mark.e2e
+def test_readiness_probe(client):
+    """Test readiness probe returns 200 when service is ready."""
+    response = client.get("/health/ready")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "ready"
+    assert "timestamp" in data
+
+
+@pytest.mark.e2e
+def test_startup_probe(client):
+    """Test startup probe returns 200 when service has started."""
+    response = client.get("/health/startup")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "started"
+    assert "timestamp" in data
