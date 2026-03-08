@@ -55,19 +55,18 @@ except ItemNotFoundError as e:
 
 **Usage:**
 ```python
-from application.commands.base import Query
-from domain.result import Result, Success
+from domain.result import Result, Success, Failure
 from domain.errors import ItemNotFoundError
 
-class GetItemQuery(Query[int, ItemResponseDTO, ItemNotFoundError]):
+class GetItemQuery:
     def __init__(self, repository: ItemRepository):
         self._repository = repository
-    
+
     async def execute(self, item_id: int) -> Result[ItemResponseDTO, ItemNotFoundError]:
         item = await self._repository.get_by_id(item_id)
         if item is None:
-            return Failure(ItemNotFoundError(item_id))
-        return Success(ItemResponseDTO.from_entity(item))
+            return Failure(ItemNotFoundError(item_id=item_id))
+        return Success(ItemResponseDTO(item_id=item.item_id))
 ```
 
 **Benefits:**
@@ -322,25 +321,6 @@ class Item:
 
 ---
 
-## Migration Strategy
-
-### Step 1: Add New Patterns (Non-Breaking)
-- Add new pattern implementations alongside existing code
-- Add decorator utilities
-- Keep existing code working
-
-### Step 2: Refactor Use Cases (Gradual)
-- Convert one use case at a time to use new patterns
-- Update tests for each use case
-- Ensure backward compatibility
-
-### Step 3: Update Routers (Last)
-- Update routers to handle Result pattern
-- Convert HTTPExceptions to error responses
-- Update API documentation
-
----
-
 ## Testing Strategy
 
 ### Unit Tests
@@ -387,12 +367,3 @@ async def test_get_item_api_not_found(client):
 - **Patterns of Enterprise Application Architecture**: Martin Fowler
 - **Python Design Patterns**: https://refactoring.guru/design-patterns/python
 
----
-
-## Next Steps
-
-1. Review this guide with the team
-2. Implement logging decorator pattern
-3. Refactor one use case as example
-4. Create migration plan for remaining code
-5. Update documentation and ADRs

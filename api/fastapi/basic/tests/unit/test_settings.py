@@ -35,18 +35,13 @@ class TestSettings:
         assert settings.host == "127.0.0.1"
         assert settings.port == 9000
 
-    def test_debug_true_from_env(self):
-        """Test reload setting configuration."""
+    def test_reload_can_be_disabled(self):
+        """Test reload setting can be set to False."""
         settings = Settings(reload=False)
         assert settings.reload is False
 
-    def test_debug_false_case_insensitive(self):
-        """Test reload setting configuration."""
-        settings = Settings(reload=False)
-        assert settings.reload is False
-
-    def test_environment_staging(self):
-        """Test custom port setting."""
+    def test_custom_port(self):
+        """Test custom port configuration."""
         settings = Settings(port=5000)
         assert settings.port == 5000
 
