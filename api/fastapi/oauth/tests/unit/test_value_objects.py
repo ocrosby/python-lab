@@ -50,3 +50,7 @@ class TestUserId:
 
     def test_inequality(self):
         assert UserId(value=uuid4()) != UserId(value=uuid4())
+
+    def test_str_returns_str_of_uuid(self):
+        uid = uuid4()
+        assert str(UserId(value=uid)) == str(uid)

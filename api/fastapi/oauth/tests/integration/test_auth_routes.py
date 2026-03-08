@@ -128,6 +128,35 @@ class TestLoginRoute:
 
 
 @pytest.mark.integration
+class TestTokenRoute:
+    def test_token_returns_200(self, client):
+        mock_uc = MagicMock()
+        mock_uc.execute = AsyncMock(return_value=make_token())
+        app.dependency_overrides[get_login_user_use_case] = lambda: mock_uc
+
+        response = client.post(
+            "/api/v1/auth/token",
+            data={"username": "alice", "password": "pass"},
+        )
+        app.dependency_overrides.pop(get_login_user_use_case, None)
+
+        assert response.status_code == 200
+
+    def test_token_returns_401_for_invalid_credentials(self, client):
+        mock_uc = MagicMock()
+        mock_uc.execute = AsyncMock(side_effect=ValueError("Invalid credentials"))
+        app.dependency_overrides[get_login_user_use_case] = lambda: mock_uc
+
+        response = client.post(
+            "/api/v1/auth/token",
+            data={"username": "alice", "password": "wrong"},
+        )
+        app.dependency_overrides.pop(get_login_user_use_case, None)
+
+        assert response.status_code == 401
+
+
+@pytest.mark.integration
 class TestMeRoute:
     def test_me_returns_user_when_authenticated(self, authenticated_client):
         response = authenticated_client.get("/api/v1/auth/me")
@@ -243,6 +272,16 @@ class TestEmailVerificationRoutes:
 
         assert response.status_code == 204
 
+    def test_verify_email_returns_400_for_invalid_token(self, client):
+        mock_uc = MagicMock()
+        mock_uc.execute = AsyncMock(side_effect=ValueError("Invalid or expired token"))
+        app.dependency_overrides[get_verify_email_use_case] = lambda: mock_uc
+
+        response = client.post("/api/v1/auth/email/verify", json={"token": "bad"})
+        app.dependency_overrides.pop(get_verify_email_use_case, None)
+
+        assert response.status_code == 400
+
     def test_resend_verification_returns_204(self, authenticated_client):
         mock_uc = MagicMock()
         mock_uc.execute = AsyncMock()
@@ -252,6 +291,18 @@ class TestEmailVerificationRoutes:
         app.dependency_overrides.pop(get_send_email_verification_use_case, None)
 
         assert response.status_code == 204
+
+    def test_resend_verification_returns_400_when_already_verified(
+        self, authenticated_client
+    ):
+        mock_uc = MagicMock()
+        mock_uc.execute = AsyncMock(side_effect=ValueError("User already verified"))
+        app.dependency_overrides[get_send_email_verification_use_case] = lambda: mock_uc
+
+        response = authenticated_client.post("/api/v1/auth/email/resend-verification")
+        app.dependency_overrides.pop(get_send_email_verification_use_case, None)
+
+        assert response.status_code == 400
 
 
 @pytest.mark.integration
@@ -271,6 +322,16 @@ class TestMFARoutes:
         assert response.status_code == 200
         assert response.json()["secret"] == "SECRET"
 
+    def test_mfa_setup_returns_400_on_error(self, authenticated_client):
+        mock_uc = MagicMock()
+        mock_uc.execute = AsyncMock(side_effect=ValueError("MFA already enabled"))
+        app.dependency_overrides[get_setup_mfa_use_case] = lambda: mock_uc
+
+        response = authenticated_client.post("/api/v1/auth/mfa/setup")
+        app.dependency_overrides.pop(get_setup_mfa_use_case, None)
+
+        assert response.status_code == 400
+
     def test_mfa_verify_returns_204(self, authenticated_client):
         mock_uc = MagicMock()
         mock_uc.execute = AsyncMock()
@@ -282,6 +343,18 @@ class TestMFARoutes:
         app.dependency_overrides.pop(get_enable_mfa_use_case, None)
 
         assert response.status_code == 204
+
+    def test_mfa_verify_returns_400_for_invalid_code(self, authenticated_client):
+        mock_uc = MagicMock()
+        mock_uc.execute = AsyncMock(side_effect=ValueError("Invalid TOTP code"))
+        app.dependency_overrides[get_enable_mfa_use_case] = lambda: mock_uc
+
+        response = authenticated_client.post(
+            "/api/v1/auth/mfa/verify", json={"code": "000000"}
+        )
+        app.dependency_overrides.pop(get_enable_mfa_use_case, None)
+
+        assert response.status_code == 400
 
 
 @pytest.mark.integration

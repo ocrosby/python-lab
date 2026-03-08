@@ -48,3 +48,18 @@ class TestMFAService:
     def test_verify_code_bad_format_returns_false(self, svc):
         secret = svc.generate_secret()
         assert svc.verify_code(secret, "abc") is False
+
+    def test_verify_code_correct_code_returns_true(self, svc):
+        import hmac
+        import struct
+        import time
+
+        secret = svc.generate_secret()
+        key = base64.b32decode(secret, casefold=True)
+        counter = int(time.time()) // 30
+        msg = struct.pack(">Q", counter)
+        hmac_digest = hmac.new(key, msg, "sha1").digest()
+        o = hmac_digest[-1] & 0x0F
+        truncated = struct.unpack(">I", hmac_digest[o : o + 4])[0] & 0x7FFFFFFF
+        code = str(truncated % 1000000).zfill(6)
+        assert svc.verify_code(secret, code) is True

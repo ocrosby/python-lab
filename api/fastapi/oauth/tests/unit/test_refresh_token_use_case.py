@@ -109,3 +109,9 @@ class TestRefreshTokenUseCase:
         uc = RefreshTokenUseCase(**deps)
         with pytest.raises(ValueError, match="Invalid user"):
             await uc.execute(RefreshTokenDTO(refresh_token="ref_tok"))
+
+    async def test_raises_for_missing_sub_in_payload(self, deps):
+        deps["jwt_handler"].decode_token = MagicMock(return_value={"type": "refresh"})
+        uc = RefreshTokenUseCase(**deps)
+        with pytest.raises(ValueError, match="Invalid refresh token"):
+            await uc.execute(RefreshTokenDTO(refresh_token="no_sub"))

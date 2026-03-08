@@ -59,3 +59,11 @@ class TestJWTHandler:
         other = JWTHandler(secret_key="other-secret")
         token = other.create_access_token(data={"sub": "alice"})
         assert handler.decode_token(token) is None
+
+    def test_create_refresh_token_with_explicit_expiry(self, handler):
+        token = handler.create_refresh_token(
+            data={"sub": "alice"}, expires_delta=timedelta(days=1)
+        )
+        payload = handler.decode_token(token)
+        assert payload is not None
+        assert payload["type"] == "refresh"
