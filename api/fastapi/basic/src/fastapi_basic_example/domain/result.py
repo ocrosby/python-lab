@@ -1,14 +1,14 @@
 """Result pattern for explicit error handling."""
 
 from dataclasses import dataclass
-from typing import TypeVar
+from typing import Generic, TypeVar
 
 T = TypeVar("T")
 E = TypeVar("E")
 
 
 @dataclass(frozen=True)
-class Success[T]:
+class Success(Generic[T]):
     """Success result containing a value."""
 
     value: T
@@ -23,7 +23,7 @@ class Success[T]:
 
 
 @dataclass(frozen=True)
-class Failure[E]:
+class Failure(Generic[E]):
     """Failure result containing an error."""
 
     error: E
