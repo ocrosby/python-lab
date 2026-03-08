@@ -116,8 +116,6 @@ def log_execution(logger_name: str):
 
 ### 4. Strategy Pattern for Health Checks (Medium Priority - Recommended)
 
-**Location:** `src/fastapi_basic_example/domain/health/`
-
 **Purpose:** Pluggable health check components
 
 **Usage:**
@@ -193,8 +191,6 @@ assert params.q == "search term"
 
 ### 6. Specification Pattern (Medium Priority - Future)
 
-**Location:** `src/fastapi_basic_example/domain/specifications/`
-
 **Purpose:** Reusable query logic
 
 **Usage:**
@@ -222,8 +218,6 @@ items = await repository.find(spec)
 ---
 
 ### 7. Builder Pattern (Low Priority - Future)
-
-**Location:** `src/fastapi_basic_example/application/builders/`
 
 **Purpose:** Fluent DTO construction
 
@@ -260,8 +254,6 @@ dto = (HealthCheckDTOBuilder()
 ---
 
 ### 8. Observer Pattern (Low Priority - Future)
-
-**Location:** `src/fastapi_basic_example/domain/events/`
 
 **Purpose:** Domain events for decoupling
 

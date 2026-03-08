@@ -276,13 +276,16 @@ LOG_LEVEL=DEBUG JSON_LOGGING=true uv run invoke dev
 
 ## Dependency Injection
 
-This project uses `dependency-injector` for managing dependencies. The DI container is defined in `src/fastapi_basic_example/infrastructure/di/container.py` and provides:
+This project uses FastAPI's native dependency injection via `Depends()`. Provider functions are defined in `src/fastapi_basic_example/infrastructure/di/dependencies.py` and wired into routes automatically:
 
-- Singleton services (HealthService)
-- Repository implementations (InMemoryItemRepository)
-- Use cases (GetItemUseCase)
+```python
+def get_item_use_case(
+    repository: Annotated[InMemoryItemRepository, Depends(get_item_repository)],
+) -> GetItemUseCase:
+    return GetItemUseCase(item_repository=repository)
+```
 
-Dependencies are injected into FastAPI routes using the `@inject` decorator and `Depends(Provide[Container.service_name])`.
+This keeps DI lightweight and framework-native without requiring a separate container library.
 
 ## Testing
 

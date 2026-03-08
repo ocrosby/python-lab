@@ -21,7 +21,3 @@ class QueryParams(BaseModel):
             return None
         return v
 
-    @property
-    def has_query(self) -> bool:
-        """Check if query parameter exists."""
-        return self.q is not None

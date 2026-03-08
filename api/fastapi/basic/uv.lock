@@ -64,18 +64,6 @@ wheels = [
 ]
 
 [[package]]
-name = "contextvars-extras"
-version = "0.7.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "sentinel-value" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/8c/1b/82ce324fd283a1083e5a9b1eaba07cb1748486caf953bc26d142d0da39c2/contextvars_extras-0.7.0.tar.gz", hash = "sha256:c4823d1f3b0e8ef863d5a622b9effbdd3a34b6bb11a6d6ab0fbcb6579d59aad6", size = 24362, upload-time = "2024-03-19T19:34:29.173Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/20/0a/d3116413f9ca488cb72c5cee8e6077ddb8014fb2b6aabd2d634cd355923e/contextvars_extras-0.7.0-py3-none-any.whl", hash = "sha256:6e82956b206d5fd28650d37fb869cee743aad62f3cf54ed607a85107713da944", size = 27714, upload-time = "2024-03-19T19:34:27.628Z" },
-]
-
-[[package]]
 name = "coverage"
 version = "7.12.0"
 source = { registry = "https://pypi.org/simple" }
@@ -156,7 +144,6 @@ name = "fastapi-basic-example"
 version = "1.0.0"
 source = { editable = "." }
 dependencies = [
-    { name = "contextvars-extras" },
     { name = "fastapi" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
@@ -191,7 +178,6 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "contextvars-extras", specifier = ">=0.3.0" },
     { name = "coverage", marker = "extra == 'dev'", specifier = ">=7.3.0" },
     { name = "fastapi", specifier = ">=0.104.0" },
     { name = "httpx", marker = "extra == 'dev'", specifier = ">=0.24.0" },
@@ -548,15 +534,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/cc/f1/7119e42aa1d3bf036ffc9478885c2e248812b7de9abea4eae89163d2929d/ruff-0.14.5-py3-none-win32.whl", hash = "sha256:c83642e6fccfb6dea8b785eb9f456800dcd6a63f362238af5fc0c83d027dd08b", size = 12925808, upload-time = "2025-11-13T19:58:42.779Z" },
     { url = "https://files.pythonhosted.org/packages/3b/9d/7c0a255d21e0912114784e4a96bf62af0618e2190cae468cd82b13625ad2/ruff-0.14.5-py3-none-win_amd64.whl", hash = "sha256:9d55d7af7166f143c94eae1db3312f9ea8f95a4defef1979ed516dbb38c27621", size = 14331546, upload-time = "2025-11-13T19:58:45.691Z" },
     { url = "https://files.pythonhosted.org/packages/e5/80/69756670caedcf3b9be597a6e12276a6cf6197076eb62aad0c608f8efce0/ruff-0.14.5-py3-none-win_arm64.whl", hash = "sha256:4b700459d4649e2594b31f20a9de33bc7c19976d4746d8d0798ad959621d64a4", size = 13433331, upload-time = "2025-11-13T19:58:48.434Z" },
-]
-
-[[package]]
-name = "sentinel-value"
-version = "1.0.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/93/80/96226b2523d52d88272bd960271a496ae468bb815180bf8a4c38b63b6390/sentinel-value-1.0.0.tar.gz", hash = "sha256:2ff8e9e303c8f6abb2ad8c6d2615ed5f11061eeda2e51edfd560dc0567de633a", size = 7297, upload-time = "2021-11-29T12:40:12.734Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/29/d0/757561b23d945e9f7431306a8dc2e60425115df55cef1d142ab52132e08f/sentinel_value-1.0.0-py3-none-any.whl", hash = "sha256:fab2501cb3f40c412a105b9a93089780c571468963f7bbcd0b5772ecdcfdc8cc", size = 6963, upload-time = "2021-11-29T12:40:11.332Z" },
 ]
 
 [[package]]
