@@ -6,19 +6,23 @@ This project implements **Hexagonal Architecture** (also known as **Ports and Ad
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     Infrastructure Layer                     │
-│  (Adapters: Web, Persistence, Config, Logging, etc.)       │
+│                    Adapters (Inbound)                        │
+│              (HTTP, CLI, GraphQL, …)                         │
 │                                                              │
-│  ┌────────────────────────────────────────────────────┐   │
-│  │              Application Layer                      │   │
-│  │  (Use Cases, Services, DTOs, Commands)            │   │
-│  │                                                     │   │
-│  │  ┌──────────────────────────────────────────┐    │   │
-│  │  │         Domain Layer                      │    │   │
-│  │  │  (Entities, Value Objects, Repositories, │    │   │
-│  │  │   Business Rules, Domain Events)         │    │   │
-│  │  └──────────────────────────────────────────┘    │   │
-│  └────────────────────────────────────────────────────┘   │
+│  ┌────────────────────────────────────────────────────┐    │
+│  │              Application Layer                      │    │
+│  │     (Use Cases, Services, DTOs, Commands)          │    │
+│  │                                                     │    │
+│  │  ┌──────────────────────────────────────────┐     │    │
+│  │  │           Domain Layer                    │     │    │
+│  │  │  (Entities, Value Objects, Rules)        │     │    │
+│  │  └──────────────────────────────────────────┘     │    │
+│  └────────────────────────────────────────────────────┘    │
+│                                                              │
+│  Ports (Outbound) ←────────────────────────────────────    │
+│                                                              │
+│                    Adapters (Outbound)                       │
+│              (Persistence, APIs, Events, …)                  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -29,8 +33,6 @@ src/fastapi_basic_example/
 ├── domain/                    # Core Business Logic (Inner Hexagon)
 │   ├── entities/              # Business entities
 │   │   └── item.py            # Item entity with business rules
-│   ├── repositories/          # Repository interfaces (Ports)
-│   │   └── item_repository.py # Abstract repository interface
 │   ├── value_objects/         # Domain value objects
 │   │   ├── health_status.py   # Health status value object
 │   │   ├── item_id.py         # Type-safe item ID
@@ -42,7 +44,7 @@ src/fastapi_basic_example/
 │   ├── errors.py              # Domain-specific errors
 │   └── result.py              # Result pattern for error handling
 │
-├── application/               # Application Use Cases (Middle Layer)
+├── application/               # Orchestration (Use Cases, Services, DTOs)
 │   ├── use_cases/             # Application-specific business logic
 │   │   └── get_item_use_case.py # Get item use case
 │   ├── services/              # Application services
@@ -53,16 +55,25 @@ src/fastapi_basic_example/
 │   │   └── base.py            # Base command interfaces
 │   └── builders/              # Builder pattern (future)
 │
-└── infrastructure/            # External Adapters (Outer Layer)
-    ├── web/                   # Web adapter (HTTP/REST)
-    │   └── routers.py         # FastAPI routers
-    ├── persistence/           # Persistence adapter (Database)
-    │   └── in_memory_item_repository.py # In-memory implementation
+├── ports/                     # Contracts / Interfaces
+│   ├── inbound/               # Driving ports (future)
+│   └── outbound/              # Driven ports (what the app needs from outside)
+│       └── item_repository.py # Abstract repository interface
+│
+├── adapters/                  # Concrete implementations
+│   ├── inbound/               # Driving adapters (how callers reach the app)
+│   │   └── http/
+│   │       └── routers.py     # FastAPI routers
+│   └── outbound/              # Driven adapters (how the app reaches outside)
+│       └── persistence/
+│           └── in_memory_item_repository.py # In-memory implementation
+│
+└── infrastructure/            # Cross-cutting concerns
     ├── di/                    # Dependency Injection
     │   └── dependencies.py    # FastAPI dependencies
-    ├── config/                # Configuration adapter
+    ├── config/                # Configuration
     │   └── settings.py        # Application settings
-    ├── logging/               # Logging adapter
+    ├── logging/               # Logging
     │   ├── config.py          # Logging configuration
     │   ├── context.py         # Logging context
     │   └── middleware.py      # Logging middleware
@@ -109,7 +120,7 @@ Immutable objects defined by their values, not identity.
 class ItemId:
     """Type-safe item ID value object."""
     value: int
-    
+
     def __post_init__(self):
         if self.value <= 0:
             raise ValueError("ItemId must be positive")
@@ -120,26 +131,6 @@ class ItemId:
 - Encapsulated validation
 - Self-documenting code
 - Immutable by design
-
-#### Repository Interfaces (`domain/repositories/`)
-**Ports** that define how to access entities.
-
-```python
-# domain/repositories/item_repository.py
-class ItemRepository(ABC):
-    """Abstract repository for Item entities (PORT)."""
-    
-    @abstractmethod
-    async def get_by_id(self, item_id: int) -> Item | None:
-        """Get item by ID."""
-        pass
-```
-
-**Key Points**:
-- Abstract interfaces only (no implementation)
-- Define the contract for data access
-- Domain layer doesn't know about databases
-- Dependency inversion principle
 
 #### Result Pattern (`domain/result.py`)
 Explicit error handling without exceptions.
@@ -165,10 +156,10 @@ Implement specific application behaviors.
 # application/use_cases/get_item_use_case.py
 class GetItemUseCase:
     """Use case for getting an item."""
-    
+
     def __init__(self, item_repository: ItemRepository):
         self._item_repository = item_repository
-    
+
     async def execute(
         self, item_id: int, query_params: QueryParams | None = None
     ) -> ItemResponseDTO:
@@ -179,7 +170,7 @@ class GetItemUseCase:
 
 **Characteristics**:
 - Orchestrates domain objects
-- Depends on repository interfaces (not implementations)
+- Depends on port interfaces (not implementations)
 - Returns DTOs (not domain entities)
 - Framework-independent
 
@@ -190,11 +181,11 @@ Application services that coordinate multiple use cases or provide cross-cutting
 # application/services/health_service.py
 class HealthService:
     """Service for health checks."""
-    
+
     async def is_alive(self) -> bool:
         """Check if service is alive."""
         return True
-    
+
     async def is_ready(self) -> bool:
         """Check if service is ready."""
         return True
@@ -216,15 +207,39 @@ class ItemResponseDTO(BaseModel):
 - API versioning without changing domain
 - Validation at the boundary
 
-### 3. Infrastructure Layer (Adapters)
+### 3. Ports (Contracts)
 
-**Purpose**: Implements external concerns and adapts them to the application's needs.
+**Purpose**: Define the interfaces through which the application communicates with the outside world. Ports belong to the application — they express what the app needs, not how it's delivered.
 
-#### Web Adapter (`infrastructure/web/`)
+#### Outbound Ports (`ports/outbound/`)
+Interfaces the application drives — what it needs from the outside world.
+
+```python
+# ports/outbound/item_repository.py
+class ItemRepository(ABC):
+    """Abstract repository for Item entities (OUTBOUND PORT)."""
+
+    @abstractmethod
+    async def get_by_id(self, item_id: int) -> Item | None:
+        """Get item by ID."""
+        pass
+```
+
+**Key Points**:
+- Abstract interfaces only (no implementation)
+- Define the contract for data access
+- Application layer doesn't know about databases
+- Dependency inversion principle
+
+### 4. Adapters (Implementations)
+
+**Purpose**: Implement the ports and translate between the application and the outside world.
+
+#### Inbound HTTP Adapter (`adapters/inbound/http/`)
 Handles HTTP requests and responses (FastAPI).
 
 ```python
-# infrastructure/web/routers.py
+# adapters/inbound/http/routers.py
 @router.get("/items/{item_id}", response_model=ItemResponseDTO)
 async def read_item(
     item_id: int,
@@ -240,27 +255,31 @@ async def read_item(
 - Translate HTTP errors
 - Inject dependencies
 
-#### Persistence Adapter (`infrastructure/persistence/`)
-**Adapters** that implement repository interfaces.
+#### Outbound Persistence Adapter (`adapters/outbound/persistence/`)
+Implements repository ports for data storage.
 
 ```python
-# infrastructure/persistence/in_memory_item_repository.py
+# adapters/outbound/persistence/in_memory_item_repository.py
 class InMemoryItemRepository(ItemRepository):
-    """In-memory implementation of ItemRepository (ADAPTER)."""
-    
+    """In-memory implementation of ItemRepository (OUTBOUND ADAPTER)."""
+
     def __init__(self):
         self._items: dict[int, Item] = {}
-    
+
     async def get_by_id(self, item_id: int) -> Item | None:
         """Get item by ID from memory."""
         return self._items.get(item_id)
 ```
 
 **Key Points**:
-- Implements repository interface (Port)
-- Contains database-specific logic
-- Can be swapped without changing domain
+- Implements repository port interface
+- Contains storage-specific logic
+- Can be swapped without changing domain or application
 - Examples: PostgreSQL, MongoDB, Redis, etc.
+
+### 5. Infrastructure (Cross-cutting)
+
+**Purpose**: Scaffolding the whole app relies on regardless of layer — not a port or adapter.
 
 #### Dependency Injection (`infrastructure/di/`)
 Wires everything together using FastAPI's DI system.
@@ -297,32 +316,32 @@ class Settings(BaseSettings):
 ## Dependency Flow
 
 ```
-┌─────────────┐
-│   Router    │ (Infrastructure - Web Adapter)
-│  (HTTP In)  │
-└──────┬──────┘
-       │ Depends on
-       ↓
-┌─────────────┐
-│  Use Case   │ (Application Layer)
-│             │
-└──────┬──────┘
-       │ Depends on (Interface)
-       ↓
-┌─────────────┐
-│ Repository  │ (Domain - Port/Interface)
-│ (Interface) │
-└─────────────┘
-       ↑
-       │ Implements
-┌──────┴──────┐
-│  Concrete   │ (Infrastructure - Adapter)
-│ Repository  │
-└─────────────┘
+┌─────────────────┐
+│ Inbound Adapter │ (adapters/inbound/http/)
+│   (HTTP In)     │
+└────────┬────────┘
+         │ Depends on
+         ↓
+┌─────────────────┐
+│   Use Case      │ (application/use_cases/)
+│                 │
+└────────┬────────┘
+         │ Depends on (Interface)
+         ↓
+┌─────────────────┐
+│ Outbound Port   │ (ports/outbound/)
+│  (Interface)    │
+└─────────────────┘
+         ↑
+         │ Implements
+┌────────┴────────┐
+│ Outbound        │ (adapters/outbound/persistence/)
+│ Adapter         │
+└─────────────────┘
 ```
 
 **Key Principle**: Dependencies point **inward**
-- Infrastructure depends on Application
+- Adapters depend on Ports
 - Application depends on Domain
 - Domain depends on nothing
 
@@ -334,38 +353,38 @@ Let's trace a request through the architecture:
 1. HTTP Request
    GET /items/123?q=test
    ↓
-   
-2. Web Adapter (infrastructure/web/routers.py)
+
+2. Inbound Adapter (adapters/inbound/http/routers.py)
    @router.get("/items/{item_id}")
    async def read_item(item_id: int, q: str | None, use_case: GetItemUseCase)
    ↓
-   
+
 3. Dependency Injection (infrastructure/di/dependencies.py)
-   - Creates InMemoryItemRepository (adapter)
+   - Creates InMemoryItemRepository (outbound adapter)
    - Creates GetItemUseCase with repository
    ↓
-   
+
 4. Use Case (application/use_cases/get_item_use_case.py)
    async def execute(item_id: int, query_params: QueryParams | None)
    - Validates input (via QueryParams value object)
-   - Calls repository interface
+   - Calls repository port interface
    ↓
-   
-5. Repository (domain/repositories/item_repository.py)
+
+5. Outbound Port (ports/outbound/item_repository.py)
    async def get_by_id(item_id: int) -> Item | None
    - Actual implementation in InMemoryItemRepository
    ↓
-   
+
 6. Domain Entity (domain/entities/item.py)
    class Item(BaseModel)
    - Returns validated entity
    ↓
-   
+
 7. DTO Conversion (application/dto/item_dto.py)
    ItemResponseDTO(item_id=..., q=...)
    - Converts entity to DTO
    ↓
-   
+
 8. HTTP Response (automatically by FastAPI)
    {"item_id": 123, "q": "test"}
 ```
@@ -394,26 +413,28 @@ def get_item_repository() -> ItemRepository:
 Domain and application layers don't depend on FastAPI:
 ```python
 # Could easily switch to Flask, Django, etc.
-# Only infrastructure/web/ would change
+# Only adapters/inbound/ would change
 ```
 
 ### 4. **Clear Boundaries**
 Each layer has a specific responsibility:
 - **Domain**: Business rules
 - **Application**: Use cases
-- **Infrastructure**: Technical concerns
+- **Ports**: Contracts
+- **Adapters**: Technical implementations
+- **Infrastructure**: Cross-cutting concerns
 
 ### 5. **Maintainability**
 Changes are localized:
-- Database change? → Only persistence adapter
-- API change? → Only web adapter
+- Database change? → Only outbound persistence adapter
+- API change? → Only inbound HTTP adapter
 - Business rule change? → Only domain layer
 
 ## Key Patterns Used
 
-### 1. **Repository Pattern** (Port)
-- Interface: `domain/repositories/item_repository.py`
-- Implementation: `infrastructure/persistence/in_memory_item_repository.py`
+### 1. **Repository Pattern** (Port + Adapter)
+- Interface: `ports/outbound/item_repository.py`
+- Implementation: `adapters/outbound/persistence/in_memory_item_repository.py`
 
 ### 2. **Dependency Injection**
 - Configuration: `infrastructure/di/dependencies.py`
