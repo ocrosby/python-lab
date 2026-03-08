@@ -86,6 +86,14 @@ uv run uvicorn src.fastapi_basic_example.main:app --reload
 
 ---
 
+## Code quality standards
+
+- **DRY/SOLID/CLEAN** principles must be maintained at all times.
+- **Cyclomatic complexity ≤ 7** for every function and method. Refactor by extracting
+  helpers or simplifying branching before committing if this limit is exceeded.
+
+---
+
 ## Pytest markers
 
 | Marker | Meaning |
