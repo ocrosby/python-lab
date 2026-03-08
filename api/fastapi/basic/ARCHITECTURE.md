@@ -109,14 +109,16 @@ Immutable objects defined by their values, not identity.
 # domain/value_objects/query_params.py
 class QueryParams(BaseModel):
     """Value object for query parameters."""
+
+    model_config = ConfigDict(frozen=True, str_strip_whitespace=True)
+
     q: str | None = None
 
-    @field_validator("q", mode="before")
+    @field_validator("q")
     @classmethod
-    def empty_string_to_none(cls, v):
-        if isinstance(v, str):
-            v = v.strip()
-            return v if v else None
+    def validate_query(cls, v):
+        if v is not None and len(v.strip()) == 0:
+            return None
         return v
 ```
 

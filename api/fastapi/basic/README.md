@@ -24,7 +24,6 @@ A production-ready FastAPI application demonstrating modern Python tooling with 
 
 - **FastAPI** - Modern, fast web framework
 - **Pydantic** - Data validation using Python type annotations
-- **dependency-injector** - Dependency injection container
 - **structlog** - Structured logging
 - **uvicorn** - ASGI server
 - **pytest** - Testing framework
