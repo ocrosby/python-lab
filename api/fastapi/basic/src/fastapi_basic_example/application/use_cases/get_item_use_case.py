@@ -1,5 +1,6 @@
 """Get item use case."""
 
+from ...domain.errors import ItemNotFoundError
 from ...domain.value_objects.query_params import QueryParams
 from ...infrastructure.decorators.logging import log_execution
 from ...ports.outbound.item_repository import ItemRepository
@@ -17,9 +18,9 @@ class GetItemUseCase:
         self, item_id: int, query_params: QueryParams | None = None
     ) -> ItemResponseDTO:
         """Execute the get item use case."""
-        # For this simple example, we'll just return the item_id and query
-        # In a real implementation, you'd fetch from the repository
-        q_value = query_params.q if query_params else None
+        item = await self._item_repository.get_by_id(item_id)
+        if item is None:
+            raise ItemNotFoundError(message="", item_id=item_id)
 
-        # ItemResponseDTO will validate item_id automatically via Pydantic
-        return ItemResponseDTO(item_id=item_id, q=q_value)
+        q_value = query_params.q if query_params else None
+        return ItemResponseDTO(item_id=item.item_id, q=q_value)

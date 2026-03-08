@@ -1,7 +1,6 @@
 """Request logging middleware."""
 
 from collections.abc import Callable
-from contextlib import asynccontextmanager
 
 import structlog
 from fastapi import Request, Response
@@ -120,15 +119,3 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
 
         return response
 
-
-@asynccontextmanager
-async def log_context(request: Request):
-    """Context manager for adding request context to logs."""
-    request_id = getattr(request.state, "request_id", None)
-    if request_id:
-        set_request_id(request_id)
-
-    try:
-        yield
-    finally:
-        pass

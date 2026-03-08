@@ -1,6 +1,25 @@
 """End-to-end API tests."""
 
 import pytest
+from fastapi.testclient import TestClient
+
+from src.fastapi_basic_example.adapters.outbound.persistence.in_memory_item_repository import (
+    InMemoryItemRepository,
+)
+from src.fastapi_basic_example.domain.entities.item import Item
+from src.fastapi_basic_example.infrastructure.di.dependencies import get_item_repository
+from src.fastapi_basic_example.main import create_app
+
+
+@pytest.fixture
+def seeded_client():
+    """Create a test client with pre-seeded items."""
+    repo = InMemoryItemRepository()
+    repo._items[5] = Item(item_id=5)
+    repo._items[10] = Item(item_id=10)
+    app = create_app()
+    app.dependency_overrides[get_item_repository] = lambda: repo
+    return TestClient(app, base_url="http://localhost")
 
 
 @pytest.mark.e2e
@@ -12,19 +31,26 @@ def test_read_root(client):
 
 
 @pytest.mark.e2e
-def test_read_item(client):
+def test_read_item(seeded_client):
     """Test the items endpoint."""
-    response = client.get("/items/5?q=somequery")
+    response = seeded_client.get("/items/5?q=somequery")
     assert response.status_code == 200
     assert response.json() == {"item_id": 5, "q": "somequery"}
 
 
 @pytest.mark.e2e
-def test_read_item_without_query(client):
+def test_read_item_without_query(seeded_client):
     """Test the items endpoint without query parameter."""
-    response = client.get("/items/10")
+    response = seeded_client.get("/items/10")
     assert response.status_code == 200
     assert response.json() == {"item_id": 10, "q": None}
+
+
+@pytest.mark.e2e
+def test_read_item_not_found(client):
+    """Test the items endpoint returns 404 for missing items."""
+    response = client.get("/items/999")
+    assert response.status_code == 404
 
 
 @pytest.mark.e2e

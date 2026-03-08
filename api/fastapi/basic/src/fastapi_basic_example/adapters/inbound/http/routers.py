@@ -13,6 +13,7 @@ from ....application.dto.item_dto import (
 from ....application.services.health_service import HealthService
 from ....application.use_cases.get_item_use_case import GetItemUseCase
 from ....domain.constants import HealthConstants
+from ....domain.errors import ItemNotFoundError
 from ....domain.value_objects.query_params import QueryParams
 from ....infrastructure.utils.datetime_utils import current_utc_timestamp
 from ....infrastructure.di.dependencies import get_health_service, get_item_use_case
@@ -45,7 +46,10 @@ async def read_item(
 ) -> ItemResponseDTO:
     """Get item by ID."""
     query_params = QueryParams(q=q) if q is not None else None
-    return await use_case.execute(item_id, query_params)
+    try:
+        return await use_case.execute(item_id, query_params)
+    except ItemNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 @router.get("/health", response_model=HealthCheckDTO, tags=["Health"])
