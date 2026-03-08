@@ -1,6 +1,6 @@
 """Tests for domain errors."""
 
-from fastapi_basic_example.domain.errors import (
+from src.fastapi_basic_example.domain.errors import (
     DomainError,
     ItemNotFoundError,
     ValidationError,

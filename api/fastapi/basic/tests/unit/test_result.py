@@ -1,6 +1,6 @@
 """Tests for Result pattern."""
 
-from fastapi_basic_example.domain.result import Failure, Success
+from src.fastapi_basic_example.domain.result import Failure, Success
 
 
 def test_success_creation():

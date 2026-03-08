@@ -36,9 +36,7 @@ return result.value
 
 ---
 
-### 2. Command/Query Pattern (High Priority - Implemented)
-
-**Location:** `src/fastapi_basic_example/application/commands/base.py`
+### 2. Command/Query Pattern (Low Priority - Future)
 
 **Purpose:** Consistent interface for business operations (CQRS)
 
@@ -159,7 +157,7 @@ class HealthService:
 
 ---
 
-### 5. Value Object Pattern (Medium Priority - Recommended)
+### 5. Value Object Pattern (Implemented)
 
 **Location:** `src/fastapi_basic_example/domain/value_objects/`
 
@@ -167,25 +165,22 @@ class HealthService:
 
 **Usage:**
 ```python
-from dataclasses import dataclass
+from pydantic import BaseModel, field_validator
 
-@dataclass(frozen=True)
-class ItemId:
-    value: int
-    
-    def __post_init__(self):
-        if self.value <= 0:
-            raise ValueError("ItemId must be positive")
-    
-    def __int__(self) -> int:
-        return self.value
-    
-    def __str__(self) -> str:
-        return str(self.value)
+class QueryParams(BaseModel):
+    q: str | None = None
+
+    @field_validator("q", mode="before")
+    @classmethod
+    def empty_string_to_none(cls, v):
+        if isinstance(v, str):
+            v = v.strip()
+            return v if v else None
+        return v
 
 # Usage
-item_id = ItemId(123)
-result = await repository.get_by_id(int(item_id))
+params = QueryParams(q="  search term  ")
+assert params.q == "search term"
 ```
 
 **Benefits:**
@@ -305,30 +300,28 @@ class Item:
 
 ## Implementation Priority
 
-### Phase 1: High Priority (Immediate)
-1. ✅ Result Pattern - Already implemented
-2. ✅ Command Pattern - Already implemented  
-3. 🔧 Logging Decorator - Implement next
-4. 🔧 Refactor existing use cases to use patterns
+### Phase 1: Implemented
+1. ✅ Result Pattern
+2. ✅ Value Object Pattern (QueryParams)
+3. ✅ Logging Decorator
 
-### Phase 2: Medium Priority (Next Sprint)
-5. Strategy Pattern for Health Checks
-6. Value Objects for domain concepts
-7. Specification Pattern for queries
+### Phase 2: Medium Priority (Future)
+4. Strategy Pattern for Health Checks
+5. Specification Pattern for queries
+6. Command/Query Pattern (CQRS)
 
-### Phase 3: Low Priority (Future Enhancement)
-8. Builder Pattern for complex DTOs
-9. Observer Pattern for domain events
-10. Event Sourcing infrastructure
+### Phase 3: Low Priority (Future)
+7. Builder Pattern for complex DTOs
+8. Observer Pattern for domain events
+9. Event Sourcing infrastructure
 
 ---
 
 ## Migration Strategy
 
 ### Step 1: Add New Patterns (Non-Breaking)
-- Add Result, Command, Error classes
+- Add new pattern implementations alongside existing code
 - Add decorator utilities
-- Add value objects
 - Keep existing code working
 
 ### Step 2: Refactor Use Cases (Gradual)

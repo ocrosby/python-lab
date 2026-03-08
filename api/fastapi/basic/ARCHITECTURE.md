@@ -106,15 +106,18 @@ class Item(BaseModel):
 Immutable objects defined by their values, not identity.
 
 ```python
-# domain/value_objects/item_id.py
-@dataclass(frozen=True)
-class ItemId:
-    """Type-safe item ID value object."""
-    value: int
+# domain/value_objects/query_params.py
+class QueryParams(BaseModel):
+    """Value object for query parameters."""
+    q: str | None = None
 
-    def __post_init__(self):
-        if self.value <= 0:
-            raise ValueError("ItemId must be positive")
+    @field_validator("q", mode="before")
+    @classmethod
+    def empty_string_to_none(cls, v):
+        if isinstance(v, str):
+            v = v.strip()
+            return v if v else None
+        return v
 ```
 
 **Benefits**:
@@ -432,7 +435,7 @@ Changes are localized:
 - Usage: FastAPI's `Depends()`
 
 ### 3. **Value Objects**
-- Examples: `ItemId`, `QueryParams`, `HealthStatus`
+- Examples: `QueryParams`
 - Location: `domain/value_objects/`
 
 ### 4. **Result Pattern**

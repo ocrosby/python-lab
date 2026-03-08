@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from fastapi_basic_example.infrastructure.decorators.logging import log_execution
+from src.fastapi_basic_example.infrastructure.decorators.logging import log_execution
 
 
 @pytest.mark.asyncio

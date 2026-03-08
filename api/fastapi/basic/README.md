@@ -51,10 +51,9 @@ For a comprehensive guide with diagrams and request flow examples, see **[ARCHIT
 └─────────────────────────────────────────┘
 ```
 
-- **Domain Layer** (`src/fastapi_basic_example/domain/`): Contains business logic, entities, and domain interfaces
+- **Domain Layer** (`src/fastapi_basic_example/domain/`): Pure business logic, entities, and domain rules
   - `entities/`: Business objects (Item)
-  - `repositories/`: Abstract repository interfaces (Ports)
-  - `value_objects/`: Type-safe domain concepts (ItemId, QueryParams, HealthStatus)
+  - `value_objects/`: Type-safe domain concepts (QueryParams)
   - `result.py`: Result pattern for explicit error handling
   - `errors.py`: Domain-specific errors
 
@@ -62,14 +61,18 @@ For a comprehensive guide with diagrams and request flow examples, see **[ARCHIT
   - `use_cases/`: Business workflows (GetItemUseCase)
   - `services/`: Application services (HealthService)
   - `dto/`: Data Transfer Objects for external communication
-  - `commands/`: Command/Query pattern interfaces
 
-- **Infrastructure Layer** (`src/fastapi_basic_example/infrastructure/`): External concerns and adapters
-  - `web/`: HTTP adapters and FastAPI routers (REST Adapter)
-  - `persistence/`: Repository implementations (Database Adapter)
+- **Ports** (`src/fastapi_basic_example/ports/`): Contracts between the application and the outside world
+  - `outbound/`: Driven ports — interfaces the app depends on (ItemRepository)
+
+- **Adapters** (`src/fastapi_basic_example/adapters/`): Concrete implementations of ports
+  - `inbound/http/`: HTTP adapter with FastAPI routers
+  - `outbound/persistence/`: In-memory repository implementation
+
+- **Infrastructure** (`src/fastapi_basic_example/infrastructure/`): Cross-cutting concerns
   - `di/`: Dependency injection configuration
   - `config/`: Configuration and settings
-  - `logging/`: Structured logging infrastructure
+  - `logging/`: Structured logging
 
 ### Benefits of This Architecture
 
@@ -97,16 +100,20 @@ basic/
 │   └── fastapi_basic_example/
 │       ├── domain/              # Business logic and rules
 │       │   ├── entities/        # Business objects
-│       │   ├── repositories/    # Repository interfaces
 │       │   └── value_objects/   # Domain value objects
 │       ├── application/         # Use cases and application services
 │       │   ├── dto/             # Data transfer objects
 │       │   ├── services/        # Application services
 │       │   └── use_cases/       # Business use cases
-│       ├── infrastructure/      # External adapters
+│       ├── ports/               # Contracts / interfaces
+│       │   └── outbound/        # Driven port interfaces
+│       ├── adapters/            # Concrete implementations
+│       │   ├── inbound/http/    # HTTP/REST adapters
+│       │   └── outbound/        # Persistence adapters
+│       ├── infrastructure/      # Cross-cutting concerns
 │       │   ├── config/          # Configuration
-│       │   ├── persistence/     # Repository implementations
-│       │   └── web/             # HTTP/REST adapters
+│       │   ├── di/              # Dependency injection
+│       │   └── logging/         # Structured logging
 │       └── main.py              # Application entry point
 ├── tests/
 │   ├── unit/                    # Unit tests
@@ -316,7 +323,6 @@ All tests use pytest markers (`@pytest.mark.unit`, `@pytest.mark.integration`, `
 
 ### Health Check Endpoints
 - `GET /health` - Basic health status
-- `GET /health/detailed` - Detailed health status with uptime and metadata
 
 ### Kubernetes Probe Endpoints
 - `GET /health/live` or `/healthz` - Liveness probe (is the app running?)
