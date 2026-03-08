@@ -15,8 +15,8 @@ from ....application.use_cases.get_item_use_case import GetItemUseCase
 from ....domain.constants import HealthConstants
 from ....domain.errors import ItemNotFoundError
 from ....domain.value_objects.query_params import QueryParams
-from ....infrastructure.utils.datetime_utils import current_utc_timestamp
 from ....infrastructure.di.dependencies import get_health_service, get_item_use_case
+from ....infrastructure.utils.datetime_utils import current_utc_timestamp
 
 router = APIRouter()
 
@@ -47,7 +47,7 @@ async def read_item(
     try:
         return await use_case.execute(item_id, query_params)
     except ItemNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=404, detail=str(e)) from e
 
 
 @router.get("/health", response_model=HealthCheckDTO, tags=["Health"])

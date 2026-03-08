@@ -8,7 +8,7 @@ E = TypeVar("E")
 
 
 @dataclass(frozen=True)
-class Success(Generic[T]):
+class Success(Generic[T]):  # noqa: UP046
     """Success result containing a value."""
 
     value: T
@@ -23,7 +23,7 @@ class Success(Generic[T]):
 
 
 @dataclass(frozen=True)
-class Failure(Generic[E]):
+class Failure(Generic[E]):  # noqa: UP046
     """Failure result containing an error."""
 
     error: E

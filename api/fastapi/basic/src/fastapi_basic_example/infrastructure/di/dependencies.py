@@ -4,9 +4,11 @@ from typing import Annotated
 
 from fastapi import Depends
 
+from ...adapters.outbound.persistence.in_memory_item_repository import (
+    InMemoryItemRepository,
+)
 from ...application.services.health_service import HealthService
 from ...application.use_cases.get_item_use_case import GetItemUseCase
-from ...adapters.outbound.persistence.in_memory_item_repository import InMemoryItemRepository
 from ...ports.outbound.item_repository import ItemRepository
 from ..utils.id_generator import IdGenerator, UuidGenerator
 from ..utils.time_provider import SystemTimeProvider, TimeProvider

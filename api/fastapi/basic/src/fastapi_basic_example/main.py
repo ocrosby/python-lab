@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 
+from .adapters.inbound.http.routers import router
 from .domain.constants import AppConstants
 from .infrastructure.config.settings import Settings
 from .infrastructure.di.dependencies import get_id_generator, get_time_provider
@@ -14,7 +15,6 @@ from .infrastructure.logging.middleware import (
     RequestLoggingMiddleware,
     TimingMiddleware,
 )
-from .adapters.inbound.http.routers import router
 
 
 def create_app() -> FastAPI:

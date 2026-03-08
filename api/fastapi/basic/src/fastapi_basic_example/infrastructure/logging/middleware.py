@@ -58,7 +58,8 @@ class TimingMiddleware(BaseHTTPMiddleware):
 
         request_id = getattr(request.state, "request_id", "unknown")
         logger.info(
-            f"Request timing: {request.method} {request.url.path} - {process_time:.4f}s",
+            f"Request timing: {request.method} {request.url.path}"
+            f" - {process_time:.4f}s",
             request_id=request_id,
             method=request.method,
             path=request.url.path,

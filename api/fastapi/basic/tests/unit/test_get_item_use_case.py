@@ -83,7 +83,8 @@ class TestGetItemUseCase:
     async def test_execute_repository_exception_propagated(self, mocker: MockerFixture):
         """Test that repository exceptions propagate through the use case."""
         mock_repo = mocker.MagicMock()
-        mock_repo.get_by_id = AsyncMock(side_effect=RuntimeError("DB connection failed"))
+        error = RuntimeError("DB connection failed")
+        mock_repo.get_by_id = AsyncMock(side_effect=error)
         use_case = GetItemUseCase(mock_repo)
 
         with pytest.raises(RuntimeError, match="DB connection failed"):
