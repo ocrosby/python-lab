@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from fastapi_oauth_example.application.dto.user_dto import RefreshTokenDTO, TokenDTO
-from fastapi_oauth_example.domain.repositories.user_repository import UserRepository
+from fastapi_oauth_example.ports.outbound.user_repository import UserRepository
 from fastapi_oauth_example.infrastructure.security.jwt_handler import JWTHandler
 
 

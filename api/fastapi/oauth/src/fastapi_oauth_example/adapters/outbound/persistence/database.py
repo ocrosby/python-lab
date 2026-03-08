@@ -2,7 +2,7 @@ from collections.abc import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from fastapi_oauth_example.infrastructure.persistence.models import Base
+from fastapi_oauth_example.adapters.outbound.persistence.models import Base
 
 
 class Database:

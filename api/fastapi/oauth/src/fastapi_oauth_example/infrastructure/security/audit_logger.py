@@ -3,7 +3,7 @@ from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from fastapi_oauth_example.infrastructure.persistence.models import AuditLogModel
+from fastapi_oauth_example.adapters.outbound.persistence.models import AuditLogModel
 
 
 class AuditLogger:

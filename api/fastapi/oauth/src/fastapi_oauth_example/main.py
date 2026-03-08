@@ -8,11 +8,11 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi_oauth_example.infrastructure.config.settings import settings
 from fastapi_oauth_example.infrastructure.di.dependencies import database
 from fastapi_oauth_example.infrastructure.security.rate_limiter import RateLimiter
-from fastapi_oauth_example.infrastructure.web.auth_router import router as auth_router
-from fastapi_oauth_example.infrastructure.web.health_router import (
+from fastapi_oauth_example.adapters.inbound.http.auth_router import router as auth_router
+from fastapi_oauth_example.adapters.inbound.http.health_router import (
     router as health_router,
 )
-from fastapi_oauth_example.infrastructure.web.middleware import (
+from fastapi_oauth_example.infrastructure.logging.middleware import (
     LoggingMiddleware,
     RateLimitMiddleware,
     RequestIDMiddleware,

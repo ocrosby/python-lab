@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from fastapi_oauth_example.infrastructure.persistence.models import TokenBlacklistModel
+from fastapi_oauth_example.adapters.outbound.persistence.models import TokenBlacklistModel
 
 
 class TokenBlacklistService:

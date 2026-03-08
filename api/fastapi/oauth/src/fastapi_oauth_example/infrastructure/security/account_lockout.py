@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from fastapi_oauth_example.domain.entities.user import User
-from fastapi_oauth_example.domain.repositories.user_repository import UserRepository
+from fastapi_oauth_example.ports.outbound.user_repository import UserRepository
 
 
 class AccountLockoutService:

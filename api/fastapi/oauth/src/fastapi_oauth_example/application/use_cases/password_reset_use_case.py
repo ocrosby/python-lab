@@ -5,7 +5,7 @@ from fastapi_oauth_example.application.dto.user_dto import (
     PasswordResetRequestDTO,
 )
 from fastapi_oauth_example.application.services.email_service import EmailService
-from fastapi_oauth_example.domain.repositories.user_repository import UserRepository
+from fastapi_oauth_example.ports.outbound.user_repository import UserRepository
 from fastapi_oauth_example.domain.value_objects.email import Email
 from fastapi_oauth_example.infrastructure.security.password_hasher import (
     PasswordHasher,

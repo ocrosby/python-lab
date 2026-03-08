@@ -13,10 +13,10 @@ from fastapi_oauth_example.application.use_cases.register_user_use_case import (
 from fastapi_oauth_example.application.use_cases.verify_token_use_case import (
     VerifyTokenUseCase,
 )
-from fastapi_oauth_example.domain.repositories.user_repository import UserRepository
+from fastapi_oauth_example.ports.outbound.user_repository import UserRepository
 from fastapi_oauth_example.infrastructure.config.settings import settings
-from fastapi_oauth_example.infrastructure.persistence.database import Database
-from fastapi_oauth_example.infrastructure.persistence.postgres_user_repository import (
+from fastapi_oauth_example.adapters.outbound.persistence.database import Database
+from fastapi_oauth_example.adapters.outbound.persistence.postgres_user_repository import (
     PostgresUserRepository,
 )
 from fastapi_oauth_example.infrastructure.security.jwt_handler import JWTHandler

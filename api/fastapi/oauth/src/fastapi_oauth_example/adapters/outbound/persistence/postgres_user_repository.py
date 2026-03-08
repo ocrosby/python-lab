@@ -4,10 +4,10 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from fastapi_oauth_example.domain.entities.user import User
-from fastapi_oauth_example.domain.repositories.user_repository import UserRepository
+from fastapi_oauth_example.ports.outbound.user_repository import UserRepository
 from fastapi_oauth_example.domain.value_objects.email import Email
 from fastapi_oauth_example.domain.value_objects.user_id import UserId
-from fastapi_oauth_example.infrastructure.persistence.models import UserModel
+from fastapi_oauth_example.adapters.outbound.persistence.models import UserModel
 
 
 class PostgresUserRepository(UserRepository):
