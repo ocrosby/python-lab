@@ -1,15 +1,25 @@
 # Build stage
 FROM python:3.13-slim AS builder
 
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
 WORKDIR /app
 
 COPY pyproject.toml uv.lock README.md ./
 COPY src ./src
-RUN pip install --no-cache-dir uv && \
-    uv pip install --system --no-cache .
+
+RUN uv sync --frozen --no-dev --no-editable
 
 # Runtime stage
 FROM python:3.13-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    VIRTUAL_ENV=/app/.venv \
+    PATH="/app/.venv/bin:$PATH"
 
 WORKDIR /app
 
@@ -18,8 +28,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     groupadd -r app && useradd -r -g app app
 
-COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
+COPY --from=builder /app/.venv /app/.venv
 
 USER app
 
