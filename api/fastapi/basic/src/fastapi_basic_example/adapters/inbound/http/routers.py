@@ -30,11 +30,9 @@ def create_probe_response(status: str) -> ProbeResponseDTO:
 
 
 @router.get("/", response_model=WelcomeDTO)
-async def read_root(
-    health_service: Annotated[HealthService, Depends(get_health_service)],
-) -> WelcomeDTO:
+async def read_root() -> WelcomeDTO:
     """Root endpoint."""
-    return health_service.get_welcome_message()
+    return WelcomeDTO()
 
 
 @router.get("/items/{item_id}", response_model=ItemResponseDTO)

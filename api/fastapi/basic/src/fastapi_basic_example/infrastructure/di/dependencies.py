@@ -7,6 +7,7 @@ from fastapi import Depends
 from ...application.services.health_service import HealthService
 from ...application.use_cases.get_item_use_case import GetItemUseCase
 from ...adapters.outbound.persistence.in_memory_item_repository import InMemoryItemRepository
+from ...ports.outbound.item_repository import ItemRepository
 from ..utils.id_generator import IdGenerator, UuidGenerator
 from ..utils.time_provider import SystemTimeProvider, TimeProvider
 
@@ -21,7 +22,7 @@ def get_time_provider() -> TimeProvider:
     return SystemTimeProvider()
 
 
-def get_item_repository() -> InMemoryItemRepository:
+def get_item_repository() -> ItemRepository:
     """Get item repository instance."""
     return InMemoryItemRepository()
 
@@ -32,7 +33,7 @@ def get_health_service() -> HealthService:
 
 
 def get_item_use_case(
-    repository: Annotated[InMemoryItemRepository, Depends(get_item_repository)],
+    repository: Annotated[ItemRepository, Depends(get_item_repository)],
 ) -> GetItemUseCase:
     """Get item use case instance."""
     return GetItemUseCase(item_repository=repository)

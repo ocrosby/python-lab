@@ -5,7 +5,7 @@ import structlog
 from ...domain.constants import HealthConstants
 from ...infrastructure.logging.context import get_logger_context
 from ...infrastructure.utils.datetime_utils import current_utc_timestamp
-from ..dto.item_dto import HealthCheckDTO, WelcomeDTO
+from ..dto.item_dto import HealthCheckDTO
 
 logger = structlog.get_logger(__name__)
 
@@ -23,11 +23,6 @@ class HealthService:
         return HealthCheckDTO(
             status=HealthConstants.HEALTHY, timestamp=current_utc_timestamp()
         )
-
-    def get_welcome_message(self) -> WelcomeDTO:
-        """Get welcome message."""
-        logger.debug("Welcome message requested", **get_logger_context())
-        return WelcomeDTO()
 
     async def is_ready(self) -> bool:
         """Check if the application is ready to serve traffic."""

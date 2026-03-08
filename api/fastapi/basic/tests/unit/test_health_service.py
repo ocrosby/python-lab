@@ -2,10 +2,7 @@
 
 import pytest
 
-from src.fastapi_basic_example.application.dto.item_dto import (
-    HealthCheckDTO,
-    WelcomeDTO,
-)
+from src.fastapi_basic_example.application.dto.item_dto import HealthCheckDTO
 from src.fastapi_basic_example.application.services.health_service import HealthService
 
 
@@ -27,14 +24,6 @@ class TestHealthService:
         assert isinstance(result, HealthCheckDTO)
         assert result.status == "healthy"
         assert result.timestamp is not None
-
-    def test_get_welcome_message(self):
-        """Test get_welcome_message returns correct message."""
-        health_service = HealthService()
-        result = health_service.get_welcome_message()
-
-        assert isinstance(result, WelcomeDTO)
-        assert result.Hello == "World"
 
     @pytest.mark.asyncio
     async def test_is_alive(self):

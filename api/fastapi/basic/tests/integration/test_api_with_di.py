@@ -19,26 +19,12 @@ from src.fastapi_basic_example.infrastructure.di.dependencies import (
 class TestAPIWithDI:
     """Test API endpoints with dependency injection mocking."""
 
-    def test_root_endpoint_with_mocked_health_service(
-        self, app, client, mocker: MockerFixture
-    ):
-        """Test root endpoint with mocked health service."""
-        from src.fastapi_basic_example.application.dto.item_dto import WelcomeDTO
-
-        mock_health_service = mocker.MagicMock(spec=HealthService)
-        mock_health_service.get_welcome_message.return_value = WelcomeDTO(
-            Hello="Mocked Hello"
-        )
-
-        app.dependency_overrides[get_health_service] = lambda: mock_health_service
-
+    def test_root_endpoint(self, client):
+        """Test root endpoint returns welcome message."""
         response = client.get("/")
 
-        app.dependency_overrides.clear()
-
         assert response.status_code == 200
-        data = response.json()
-        assert data["Hello"] == "Mocked Hello"
+        assert response.json() == {"Hello": "World"}
 
     def test_health_endpoint_with_mocked_service(
         self, app, client, mocker: MockerFixture
