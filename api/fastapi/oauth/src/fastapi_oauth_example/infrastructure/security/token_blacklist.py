@@ -1,9 +1,11 @@
 from datetime import datetime
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from fastapi_oauth_example.adapters.outbound.persistence.models import TokenBlacklistModel
+from fastapi_oauth_example.adapters.outbound.persistence.models import (
+    TokenBlacklistModel,
+)
 
 
 class TokenBlacklistService:
@@ -22,7 +24,7 @@ class TokenBlacklistService:
 
     async def cleanup_expired_tokens(self, session: AsyncSession) -> None:
         await session.execute(
-            select(TokenBlacklistModel).where(
+            delete(TokenBlacklistModel).where(
                 TokenBlacklistModel.expires_at < datetime.utcnow()
             )
         )

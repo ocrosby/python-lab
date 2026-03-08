@@ -1,8 +1,11 @@
 from datetime import timedelta
 
+from fastapi_oauth_example.adapters.outbound.persistence.token_repositories import (
+    RefreshTokenRepository,
+)
 from fastapi_oauth_example.application.dto.user_dto import RefreshTokenDTO, TokenDTO
-from fastapi_oauth_example.ports.outbound.user_repository import UserRepository
 from fastapi_oauth_example.infrastructure.security.jwt_handler import JWTHandler
+from fastapi_oauth_example.ports.outbound.user_repository import UserRepository
 
 
 class RefreshTokenUseCase:
@@ -10,17 +13,22 @@ class RefreshTokenUseCase:
         self,
         user_repository: UserRepository,
         jwt_handler: JWTHandler,
+        refresh_token_repository: RefreshTokenRepository,
         access_token_expire_minutes: int = 30,
     ):
         self._user_repository = user_repository
         self._jwt_handler = jwt_handler
+        self._refresh_repo = refresh_token_repository
         self._access_token_expire_minutes = access_token_expire_minutes
 
     async def execute(self, dto: RefreshTokenDTO) -> TokenDTO:
         payload = self._jwt_handler.decode_token(dto.refresh_token)
-
         if not payload or payload.get("type") != "refresh":
             raise ValueError("Invalid refresh token")
+
+        rt = await self._refresh_repo.get_by_token(dto.refresh_token)
+        if not rt or rt.revoked:
+            raise ValueError("Refresh token has been revoked")
 
         username = payload.get("sub")
         if not username:
@@ -34,8 +42,4 @@ class RefreshTokenUseCase:
         access_token = self._jwt_handler.create_access_token(
             data={"sub": username}, expires_delta=access_token_expires
         )
-
-        return TokenDTO(
-            access_token=access_token,
-            refresh_token=dto.refresh_token,
-        )
+        return TokenDTO(access_token=access_token, refresh_token=dto.refresh_token)

@@ -5,12 +5,12 @@ from fastapi_oauth_example.application.dto.user_dto import (
     UserResponseDTO,
 )
 from fastapi_oauth_example.domain.entities.user import User
-from fastapi_oauth_example.ports.outbound.user_repository import UserRepository
 from fastapi_oauth_example.domain.value_objects.email import Email
 from fastapi_oauth_example.domain.value_objects.user_id import UserId
 from fastapi_oauth_example.infrastructure.security.password_hasher import (
     PasswordHasher,
 )
+from fastapi_oauth_example.ports.outbound.user_repository import UserRepository
 
 
 class RegisterUserUseCase:
@@ -46,6 +46,7 @@ class RegisterUserUseCase:
             username=created_user.username,
             is_active=created_user.is_active,
             is_verified=created_user.is_verified,
+            mfa_enabled=created_user.mfa_enabled,
             created_at=created_user.created_at,
             updated_at=created_user.updated_at,
         )

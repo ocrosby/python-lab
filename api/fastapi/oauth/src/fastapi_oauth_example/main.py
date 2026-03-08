@@ -5,13 +5,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 
-from fastapi_oauth_example.infrastructure.config.settings import settings
-from fastapi_oauth_example.infrastructure.di.dependencies import database
-from fastapi_oauth_example.infrastructure.security.rate_limiter import RateLimiter
-from fastapi_oauth_example.adapters.inbound.http.auth_router import router as auth_router
+from fastapi_oauth_example.adapters.inbound.http.auth_router import (
+    router as auth_router,
+)
 from fastapi_oauth_example.adapters.inbound.http.health_router import (
     router as health_router,
 )
+from fastapi_oauth_example.infrastructure.config.settings import settings
+from fastapi_oauth_example.infrastructure.di.dependencies import database
 from fastapi_oauth_example.infrastructure.logging.middleware import (
     LoggingMiddleware,
     RateLimitMiddleware,
@@ -19,6 +20,7 @@ from fastapi_oauth_example.infrastructure.logging.middleware import (
     SecurityHeadersMiddleware,
     TimingMiddleware,
 )
+from fastapi_oauth_example.infrastructure.security.rate_limiter import RateLimiter
 
 
 @asynccontextmanager
@@ -72,4 +74,6 @@ app.include_router(auth_router)
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("fastapi_oauth_example.main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(
+        "fastapi_oauth_example.main:app", host="0.0.0.0", port=8000, reload=True
+    )

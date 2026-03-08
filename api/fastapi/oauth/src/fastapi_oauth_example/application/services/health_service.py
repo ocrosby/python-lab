@@ -5,7 +5,6 @@ logger = logging.getLogger(__name__)
 
 
 class HealthService:
-
     def __init__(self):
         self.startup_time = datetime.now(UTC)
         logger.info("Health service initialized")

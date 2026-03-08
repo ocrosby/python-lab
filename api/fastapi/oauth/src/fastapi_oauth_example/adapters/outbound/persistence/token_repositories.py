@@ -42,6 +42,15 @@ class RefreshTokenRepository:
             refresh_token.revoked = True
             await self._session.commit()
 
+    async def revoke_by_id(self, token_id: UUID) -> None:
+        result = await self._session.execute(
+            select(RefreshTokenModel).where(RefreshTokenModel.id == token_id)
+        )
+        refresh_token = result.scalar_one_or_none()
+        if refresh_token:
+            refresh_token.revoked = True
+            await self._session.commit()
+
 
 class PasswordResetTokenRepository:
     def __init__(self, session: AsyncSession):
