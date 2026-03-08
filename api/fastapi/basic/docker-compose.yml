@@ -1,5 +1,6 @@
 services:
   fastapi-app:
+    container_name: fastapi-basic-example
     build: .
     ports:
       - "8000:8000"
@@ -11,9 +12,10 @@ services:
       "uvicorn", "fastapi_basic_example.main:app",
       "--host", "0.0.0.0",
       "--port", "8000",
-      "--reload"
+      "--reload",
+      "--reload-dir", "/app/src"
     ]
-    restart: unless-stopped
+    restart: "no"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health/ready"]
       interval: 30s
